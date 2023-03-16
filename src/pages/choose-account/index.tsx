@@ -6,23 +6,11 @@ import Link from 'next/link'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import Checkbox from '@mui/material/Checkbox'
-import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
 import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
-import InputAdornment from '@mui/material/InputAdornment'
 import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
-
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
@@ -33,7 +21,8 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import { useRouter } from 'next/router'
-import { Grid } from '@mui/material'
+import { Avatar, Button } from '@mui/material'
+
 interface State {
   phoneOrEmail: string
 }
@@ -43,14 +32,7 @@ const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: 450 }
 }))
 
-const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ theme }) => ({
-  '& .MuiFormControlLabel-label': {
-    fontSize: '0.875rem',
-    color: theme.palette.text.secondary
-  }
-}))
-
-const CantAccessPhone = () => {
+const ChooseAccount = () => {
   // ** State
   const [values, setValues] = useState<State>({
     phoneOrEmail: ''
@@ -58,26 +40,6 @@ const CantAccessPhone = () => {
 
   // ** Hook
   const theme = useTheme()
-
-  //router
-  const router = useRouter();
-
-  const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
-
-  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    router.push("/two-step-v");
-  }
-
-  const goPrevious = () => {
-    router.back();
-  }
   
   return (
     <Box className='content-center'>
@@ -160,23 +122,28 @@ const CantAccessPhone = () => {
           </Box>
           <Box sx={{ mb: 6 }}>
             <Typography variant='h5' sx={{ mb: 1.5, fontWeight: 600, letterSpacing: '0.18px' }}>
-              {`Can't access my phone number!`}
+              {`Choose an account`}
             </Typography>
-            <Typography variant='body2'>Enter your recovery phone number or email</Typography>
           </Box>
-          <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-            <TextField fullWidth id='emailOrPhone' label='Email or phone' sx={{ mb: 4 }} />
-            <Grid item xs={12} mt={7}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 7 }}>
-                <Button onClick={goPrevious} color='secondary' variant='text' startIcon={<Icon icon='mdi:arrow-left' fontSize={20}/>}>
-                  Previous
-                </Button>
-                <Button type='submit' color='primary' variant='contained' endIcon={<Icon icon='mdi:arrow-right' fontSize={20} />}>
-                  Next
-                </Button>
-              </Box>
-            </Grid>
-          </form>
+          <Button 
+            sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#5459d1', marginBottom: 3}}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Avatar alt='Victor Anderson' src='/images/avatars/1.png' sx={{ mr: 3, width: 40, height: 40 }} />
+              <div>
+                <Typography sx={{ fontWeight: 500, color: '#fff'}}>Username</Typography>
+                <Typography variant='caption' sx={{color: '#fff', textTransform: 'lowercase'}}>info@zyco.nl</Typography>
+              </div>
+            </Box>
+          </Button>
+          <Button 
+            sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Avatar alt='Victor Anderson' src='/images/avatars/1.png' sx={{ mr: 3, width: 40, height: 40 }} />
+              <div>
+                <Typography sx={{ fontWeight: 500 }} color='secondary'>Use other account</Typography>
+              </div>
+            </Box>
+          </Button>
         </CardContent>
       </Card>
       <FooterIllustrationsV1 />
@@ -184,8 +151,8 @@ const CantAccessPhone = () => {
   )
 }
 
-CantAccessPhone.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+ChooseAccount.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-CantAccessPhone.guestGuard = true
+ChooseAccount.guestGuard = true
 
-export default CantAccessPhone
+export default ChooseAccount

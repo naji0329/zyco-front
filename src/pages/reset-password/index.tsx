@@ -33,9 +33,11 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import { useRouter } from 'next/router'
-import { Grid } from '@mui/material'
 interface State {
-  phoneOrEmail: string
+  newPassword: string,
+  confirmPassword: string,
+  showNewPassword: boolean,
+  showConfirmPassword: boolean
 }
 
 // ** Styled Components
@@ -50,10 +52,13 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
   }
 }))
 
-const CantAccessPhone = () => {
+const ResetPassword = () => {
   // ** State
   const [values, setValues] = useState<State>({
-    phoneOrEmail: ''
+    newPassword: "",
+    confirmPassword: "",
+    showNewPassword: false,
+    showConfirmPassword: false
   })
 
   // ** Hook
@@ -72,11 +77,10 @@ const CantAccessPhone = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push("/two-step-v");
   }
 
-  const goPrevious = () => {
-    router.back();
+  const handleClickShowPassword = (element: "showNewPassword"|"showConfirmPassword") => {
+    setValues({ ...values, [element]: !element })
   }
   
   return (
@@ -160,22 +164,59 @@ const CantAccessPhone = () => {
           </Box>
           <Box sx={{ mb: 6 }}>
             <Typography variant='h5' sx={{ mb: 1.5, fontWeight: 600, letterSpacing: '0.18px' }}>
-              {`Can't access my phone number!`}
+              {`Reset Password 🔒`}
             </Typography>
-            <Typography variant='body2'>Enter your recovery phone number or email</Typography>
+            <Typography variant='body2'>Your new password must be different from previously used passwords</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-            <TextField fullWidth id='emailOrPhone' label='Email or phone' sx={{ mb: 4 }} />
-            <Grid item xs={12} mt={7}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 7 }}>
-                <Button onClick={goPrevious} color='secondary' variant='text' startIcon={<Icon icon='mdi:arrow-left' fontSize={20}/>}>
-                  Previous
-                </Button>
-                <Button type='submit' color='primary' variant='contained' endIcon={<Icon icon='mdi:arrow-right' fontSize={20} />}>
-                  Next
-                </Button>
-              </Box>
-            </Grid>
+            <FormControl fullWidth sx={{marginBottom: 4}}>
+              <InputLabel htmlFor='auth-login-password'>New Password</InputLabel>
+              <OutlinedInput
+                label='New Password'
+                value={values.newPassword}
+                id='auth-login-password'
+                onChange={handleChange('newPassword')}
+                type={values.showNewPassword ? 'text' : 'password'}
+                endAdornment={
+                  <InputAdornment position='end'>
+                    <IconButton
+                      edge='end'
+                      onClick={()=>handleClickShowPassword("showNewPassword")}
+                      onMouseDown={handleMouseDownPassword}
+                      aria-label='toggle password visibility'
+                    >
+                      <Icon icon={values.showNewPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel htmlFor='auth-login-password'>Confirm Password</InputLabel>
+              <OutlinedInput
+                label='Confirm Password'
+                value={values.newPassword}
+                id='auth-login-password'
+                onChange={handleChange('newPassword')}
+                type={values.showNewPassword ? 'text' : 'password'}
+                endAdornment={
+                  <InputAdornment position='end'>
+                    <IconButton
+                      edge='end'
+                      onClick={()=>handleClickShowPassword("showNewPassword")}
+                      onMouseDown={handleMouseDownPassword}
+                      aria-label='toggle password visibility'
+                    >
+                      <Icon icon={values.showNewPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+            <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7, mt: 4 }}>
+              Confirm
+            </Button>
+            
           </form>
         </CardContent>
       </Card>
@@ -184,8 +225,8 @@ const CantAccessPhone = () => {
   )
 }
 
-CantAccessPhone.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+ResetPassword.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-CantAccessPhone.guestGuard = true
+ResetPassword.guestGuard = true
 
-export default CantAccessPhone
+export default ResetPassword

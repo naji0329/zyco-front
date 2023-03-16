@@ -1,5 +1,5 @@
-// ** React Imports
-import { ReactNode, ChangeEvent, useState, KeyboardEvent, FormEvent } from 'react'
+// ** ReactImports
+import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useState } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -7,15 +7,22 @@ import Link from 'next/link'
 // ** MUI Components
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
+import Checkbox from '@mui/material/Checkbox'
+import TextField from '@mui/material/TextField'
+import InputLabel from '@mui/material/InputLabel'
 import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
 import CardContent from '@mui/material/CardContent'
+import FormControl from '@mui/material/FormControl'
+import OutlinedInput from '@mui/material/OutlinedInput'
 import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
-import FormHelperText from '@mui/material/FormHelperText'
+import InputAdornment from '@mui/material/InputAdornment'
+import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
-// ** Third Party Imports
-import Cleave from 'cleave.js/react'
-import { useForm, Controller } from 'react-hook-form'
+// ** Icon Imports
+import Icon from 'src/@core/components/icon'
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
@@ -25,22 +32,12 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
-
-// ** Custom Styled Component
-import CleaveWrapper from 'src/@core/styles/libs/react-cleave'
-
-// ** Util Import
-import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
-
 import { useRouter } from 'next/router'
-
-// ** Styles
-
-import 'cleave.js/dist/addons/cleave-phone.us'
 import { Grid } from '@mui/material'
-import { Icon } from '@iconify/react'
 interface State {
-  phoneOrEmail: string
+  firstName: string,
+  lastName: string,
+  phoneNumber: string
 }
 
 // ** Styled Components
@@ -48,119 +45,46 @@ const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: 450 }
 }))
 
-const LinkStyled = styled(Link)(({ theme }) => ({
-  textDecoration: 'none',
-  marginLeft: theme.spacing(1),
-  color: theme.palette.primary.main
-}))
-
-const CleaveInput = styled(Cleave)(({ theme }) => ({
-  maxWidth: 50,
-  textAlign: 'center',
-  height: '50px !important',
-  fontSize: '150% !important',
-  marginTop: theme.spacing(2),
-  marginBottom: theme.spacing(2),
-  '&:not(:last-child)': {
-    marginRight: theme.spacing(2)
-  },
-  '&::-webkit-outer-spin-button, &::-webkit-inner-spin-button': {
-    margin: 0,
-    WebkitAppearance: 'none'
+const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ theme }) => ({
+  '& .MuiFormControlLabel-label': {
+    fontSize: '0.875rem',
+    color: theme.palette.text.secondary
   }
 }))
 
-const defaultValues: { [key: string]: string } = {
-  val1: '',
-  val2: '',
-  val3: '',
-  val4: '',
-  val5: '',
-  val6: ''
-}
+const CreateAccountTwo = () => {
+  // ** State
+  const [values, setValues] = useState<State>({
+    firstName: '',
+    lastName: '',
+    phoneNumber: ''
+  })
 
-const TwoStepV = () => {
-  // ** State
-  // ** State
-  const [isBackspace, setIsBackspace] = useState<boolean>(false)
-  const router = useRouter();
-  
-  const { reset } = router.query;
-  
-  // ** Hooks
+  // ** Hook
   const theme = useTheme()
-  const {
-    control,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({ defaultValues })
 
-  // ** Vars
-  const errorsArray = Object.keys(errors)
+  //router
+  const router = useRouter();
 
-  const handleChange = (event: ChangeEvent, onChange: (...event: any[]) => void) => {
-    if (!isBackspace) {
-      onChange(event)
-
-      // @ts-ignore
-      const form = event.target.form
-      const index = [...form].indexOf(event.target)
-      if (form[index].value && form[index].value.length) {
-        form.elements[index + 1].focus()
-      }
-      event.preventDefault()
-    }
+  const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, [prop]: event.target.value })
   }
 
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Backspace') {
-      setIsBackspace(true)
-
-      // @ts-ignore
-      const form = event.target.form
-      const index = [...form].indexOf(event.target)
-      if (index >= 1) {
-        if (!(form[index].value && form[index].value.length)) {
-          form.elements[index - 1].focus()
-        }
-      }
-    } else {
-      setIsBackspace(false)
-    }
+  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
   }
 
-  const renderInputs = () => {
-    return Object.keys(defaultValues).map((val, index) => (
-      <Controller
-        key={val}
-        name={val}
-        control={control}
-        rules={{ required: true }}
-        render={({ field: { value, onChange } }) => (
-          <Box
-            type='tel'
-            maxLength={1}
-            value={value}
-            autoFocus={index === 0}
-            component={CleaveInput}
-            onKeyDown={handleKeyDown}
-            onChange={(event: ChangeEvent) => handleChange(event, onChange)}
-            options={{ blocks: [1], numeral: true, numeralPositiveOnly: true }}
-            sx={{ [theme.breakpoints.down('sm')]: { px: `${theme.spacing(2)} !important` } }}
-          />
-        )}
-      />
-    ))
-  }
-
-  const onSubmitForm = () => {
-    if(reset === "password") {
-      router.push("/reset-password");
-    }
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    router.push("/login-password");
   }
 
   const goPrevious = () => {
     router.back();
+  }
+  
+  const handleClickShowPassword = () => {
+    
   }
 
   return (
@@ -244,32 +168,25 @@ const TwoStepV = () => {
           </Box>
           <Box sx={{ mb: 6 }}>
             <Typography variant='h5' sx={{ mb: 1.5, fontWeight: 600, letterSpacing: '0.18px' }}>
-              {`Two Step Verification 💬`}
+              {`Create account`}
             </Typography>
-            <Typography sx={{ color: 'text.secondary' }}>
-              We sent a verification code to your mobile. Enter the code from the mobile in the field below.
-            </Typography>
-            <Typography sx={{ mt: 2, fontWeight: 700 }}>******1234</Typography>
+            <Typography variant='body2'>Create your Zyco account</Typography>
           </Box>
-          <form onSubmit={onSubmitForm}>
-            <CleaveWrapper
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                ...(errorsArray.length && {
-                  '& .invalid:focus': {
-                    borderColor: theme => `${theme.palette.error.main} !important`,
-                    boxShadow: theme => `0 1px 3px 0 ${hexToRGBA(theme.palette.error.main, 0.4)}`
-                  }
-                })
-              }}
+          <form noValidate autoComplete='off' onSubmit={handleSubmit}>
+            <TextField autoFocus fullWidth id='firstName' label='First name' sx={{ mb: 4 }} />
+            <TextField autoFocus fullWidth id='lastName' label='Last name' sx={{ mb: 4 }} />
+            <TextField autoFocus fullWidth id='phoneNumber' label='Phone number' sx={{ mb: 4 }} />
+
+            <Box
+              sx={{ mb: 4 }}
             >
-              {renderInputs()}
-            </CleaveWrapper>
-            {errorsArray.length ? (
-              <FormHelperText sx={{ color: 'error.main' }}>Please enter a valid OTP</FormHelperText>
-            ) : null}
+              <FormControlLabel
+                label='i Agree to privacy policy & terms'
+                control={<Checkbox />}
+                sx={{ '& .MuiFormControlLabel-label': { color: 'text.primary' } }}
+              />
+            </Box>
+
             <Grid item xs={12} mt={7}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 7 }}>
                 <Button onClick={goPrevious} color='secondary' variant='text' startIcon={<Icon icon='mdi:arrow-left' fontSize={20}/>}>
@@ -280,13 +197,19 @@ const TwoStepV = () => {
                 </Button>
               </Box>
             </Grid>
+
+            <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <Typography sx={{ mr: 2, color: 'text.secondary' }}>Already have an account?</Typography>
+              <Typography
+                component={Link}
+                href='/pages/auth/register-v1'
+                sx={{ color: 'primary.main', textDecoration: 'none' }}
+              >
+                Sign in instead
+              </Typography>
+            </Box>
+            
           </form>
-          <Box sx={{ mt: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Typography sx={{ color: 'text.secondary' }}>Didn't get the code?</Typography>
-            <LinkStyled href='/' onClick={e => e.preventDefault()}>
-              Resend
-            </LinkStyled>
-          </Box>
         </CardContent>
       </Card>
       <FooterIllustrationsV1 />
@@ -294,8 +217,8 @@ const TwoStepV = () => {
   )
 }
 
-TwoStepV.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+CreateAccountTwo.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-TwoStepV.guestGuard = true
+CreateAccountTwo.guestGuard = true
 
-export default TwoStepV
+export default CreateAccountTwo

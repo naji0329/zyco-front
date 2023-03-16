@@ -33,9 +33,11 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import { useRouter } from 'next/router'
-import { Grid } from '@mui/material'
 interface State {
-  phoneOrEmail: string
+  username: string,
+  email: string,
+  password: string,
+  showPassword: boolean
 }
 
 // ** Styled Components
@@ -50,10 +52,13 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
   }
 }))
 
-const CantAccessPhone = () => {
+const CreateAccount = () => {
   // ** State
   const [values, setValues] = useState<State>({
-    phoneOrEmail: ''
+    username: '',
+    email: '',
+    password: '',
+    showPassword: false
   })
 
   // ** Hook
@@ -72,13 +77,13 @@ const CantAccessPhone = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push("/two-step-v");
-  }
-
-  const goPrevious = () => {
-    router.back();
+    router.push("/login-password");
   }
   
+  const handleClickShowPassword = () => {
+    
+  }
+
   return (
     <Box className='content-center'>
       <Card sx={{zIndex: 1}}>
@@ -160,22 +165,49 @@ const CantAccessPhone = () => {
           </Box>
           <Box sx={{ mb: 6 }}>
             <Typography variant='h5' sx={{ mb: 1.5, fontWeight: 600, letterSpacing: '0.18px' }}>
-              {`Can't access my phone number!`}
+              {`Create account`}
             </Typography>
-            <Typography variant='body2'>Enter your recovery phone number or email</Typography>
+            <Typography variant='body2'>Create your Zyco account</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-            <TextField fullWidth id='emailOrPhone' label='Email or phone' sx={{ mb: 4 }} />
-            <Grid item xs={12} mt={7}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 7 }}>
-                <Button onClick={goPrevious} color='secondary' variant='text' startIcon={<Icon icon='mdi:arrow-left' fontSize={20}/>}>
-                  Previous
-                </Button>
-                <Button type='submit' color='primary' variant='contained' endIcon={<Icon icon='mdi:arrow-right' fontSize={20} />}>
-                  Next
-                </Button>
-              </Box>
-            </Grid>
+            <TextField autoFocus fullWidth id='username' label='Username' sx={{ mb: 4 }} />
+            <TextField autoFocus fullWidth id='email' label='Email' sx={{ mb: 4 }} />
+            <FormControl fullWidth>
+              <InputLabel htmlFor='auth-login-password'>Password</InputLabel>
+              <OutlinedInput
+                label='Password'
+                value={values.password}
+                id='auth-login-password'
+                onChange={handleChange('password')}
+                type={values.showPassword ? 'text' : 'password'}
+                endAdornment={
+                  <InputAdornment position='end'>
+                    <IconButton
+                      edge='end'
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      aria-label='toggle password visibility'
+                    >
+                      <Icon icon={values.showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+            <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7, mt: 4 }}>
+              NEXT
+            </Button>
+            <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <Typography sx={{ mr: 2, color: 'text.secondary' }}>Already have an account?</Typography>
+              <Typography
+                component={Link}
+                href='/pages/auth/register-v1'
+                sx={{ color: 'primary.main', textDecoration: 'none' }}
+              >
+                Sign in instead
+              </Typography>
+            </Box>
+            
           </form>
         </CardContent>
       </Card>
@@ -184,8 +216,8 @@ const CantAccessPhone = () => {
   )
 }
 
-CantAccessPhone.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+CreateAccount.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-CantAccessPhone.guestGuard = true
+CreateAccount.guestGuard = true
 
-export default CantAccessPhone
+export default CreateAccount
