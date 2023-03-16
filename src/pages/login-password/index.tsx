@@ -1,5 +1,5 @@
 // ** ReactImports
-import { ChangeEvent, MouseEvent, ReactNode, useState } from 'react'
+import { ChangeEvent, FormEvent, MouseEvent, ReactNode, useState } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -78,9 +78,15 @@ const LoginEmailPage = () => {
   }
 
   const goPrevious = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     router.back();
   }
   
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    router.push("/two-step-v")
+  }
+
   return (
     <Box className='content-center'>
       <Card sx={{zIndex: 1}}>
@@ -166,7 +172,7 @@ const LoginEmailPage = () => {
             </Typography>
             <Typography variant='body2'>To continue, first verify that it's you</Typography>
           </Box>
-          <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
+          <form noValidate autoComplete='off' onSubmit={handleSubmit}>
             <TextField type="Password" autoFocus fullWidth id='password' label='Password' sx={{ mb: 4 }} />
             <Box
               sx={{ mb: 4, display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}
@@ -179,7 +185,7 @@ const LoginEmailPage = () => {
               <Typography
                 variant='body2'
                 component={Link}
-                href='/pages/auth/forgot-password-v1'
+                href='/forgot-password'
                 sx={{ color: 'primary.main', textDecoration: 'none' }}
               >
                 Forgot password?
@@ -190,7 +196,7 @@ const LoginEmailPage = () => {
                 <Button onClick={goPrevious} color='secondary' variant='text' startIcon={<Icon icon='mdi:arrow-left' fontSize={20}/>}>
                   Previous
                 </Button>
-                <Button color='primary' variant='contained' onClick={(e)=>console.log('h')} endIcon={<Icon icon='mdi:arrow-right' fontSize={20} />}>
+                <Button type="submit" color='primary' variant='contained' endIcon={<Icon icon='mdi:arrow-right' fontSize={20} />}>
                   Next
                 </Button>
               </Box>

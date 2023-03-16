@@ -153,9 +153,14 @@ const TwoStepV = () => {
     ))
   }
 
-  const onSubmitForm = () => {
+  const onSubmitForm = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     if(reset === "password") {
       router.push("/reset-password");
+    }else if(reset === "email") {
+      router.push("/choose-account")
+    }else{
+      router.push("/reset-password")
     }
   }
 
@@ -247,7 +252,7 @@ const TwoStepV = () => {
               {`Two Step Verification 💬`}
             </Typography>
             <Typography sx={{ color: 'text.secondary' }}>
-              We sent a verification code to your mobile. Enter the code from the mobile in the field below.
+              We sent a verification code to your {reset === 'email' ? 'email':'mobile'}. Enter the code from the {reset === 'email' ? 'email':'mobile'} in the field below.
             </Typography>
             <Typography sx={{ mt: 2, fontWeight: 700 }}>******1234</Typography>
           </Box>
@@ -275,7 +280,7 @@ const TwoStepV = () => {
                 <Button onClick={goPrevious} color='secondary' variant='text' startIcon={<Icon icon='mdi:arrow-left' fontSize={20}/>}>
                   Previous
                 </Button>
-                <Button color='primary' variant='contained' onClick={(e)=>console.log('h')} endIcon={<Icon icon='mdi:arrow-right' fontSize={20} />}>
+                <Button type="submit" color='primary' variant='contained' endIcon={<Icon icon='mdi:arrow-right' fontSize={20} />}>
                   Next
                 </Button>
               </Box>
