@@ -194,7 +194,7 @@ const LoginEmailPage = () => {
               <Typography
                 variant='body2'
                 component={Link}
-                href='/pages/auth/forgot-password-v1'
+                href='/account-recovery'
                 sx={{ color: 'primary.main', textDecoration: 'none' }}
               >
                 Can't login
