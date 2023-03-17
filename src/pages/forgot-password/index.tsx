@@ -72,7 +72,7 @@ const ForgotPassword = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push("/login-password");
+    router.push("/two-step-v?reset=password");
   }
 
   const goPrevious = () => {
@@ -171,7 +171,7 @@ const ForgotPassword = () => {
                 <Button onClick={goPrevious} color='secondary' variant='text' startIcon={<Icon icon='mdi:arrow-left' fontSize={20}/>}>
                   Previous
                 </Button>
-                <Button color='primary' variant='contained' onClick={(e)=>console.log('h')} endIcon={<Icon icon='mdi:arrow-right' fontSize={20} />}>
+                <Button type='submit' color='primary' variant='contained' endIcon={<Icon icon='mdi:arrow-right' fontSize={20} />}>
                   Next
                 </Button>
               </Box>

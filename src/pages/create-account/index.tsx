@@ -77,7 +77,7 @@ const CreateAccount = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push("/login-password");
+    router.push("/create-account-2");
   }
   
   const handleClickShowPassword = () => {
@@ -194,14 +194,14 @@ const CreateAccount = () => {
                 }
               />
             </FormControl>
-            <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7, mt: 4 }}>
+            <Button type="submit" fullWidth size='large' variant='contained' sx={{ mb: 7, mt: 4 }}>
               NEXT
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
               <Typography sx={{ mr: 2, color: 'text.secondary' }}>Already have an account?</Typography>
               <Typography
                 component={Link}
-                href='/pages/auth/register-v1'
+                href='/login-email'
                 sx={{ color: 'primary.main', textDecoration: 'none' }}
               >
                 Sign in instead

@@ -126,7 +126,13 @@ const ChooseAccount = () => {
             </Typography>
           </Box>
           <Button 
-            sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#5459d1', marginBottom: 3}}>
+            sx={{ 
+              width: '100%', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between', 
+              backgroundColor: '#5459d1', marginBottom: 3,
+            }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Avatar alt='Victor Anderson' src='/images/avatars/1.png' sx={{ mr: 3, width: 40, height: 40 }} />
               <div>

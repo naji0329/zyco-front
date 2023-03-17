@@ -77,6 +77,7 @@ const ResetPassword = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    router.push("/login-email");
   }
 
   const handleClickShowPassword = (element: "showNewPassword"|"showConfirmPassword") => {
@@ -213,7 +214,7 @@ const ResetPassword = () => {
                 }
               />
             </FormControl>
-            <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7, mt: 4 }}>
+            <Button type="submit" fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7, mt: 4 }}>
               Confirm
             </Button>
             

@@ -76,7 +76,7 @@ const CreateAccountTwo = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push("/login-password");
+    router.push("/login-email");
   }
 
   const goPrevious = () => {
@@ -192,7 +192,7 @@ const CreateAccountTwo = () => {
                 <Button onClick={goPrevious} color='secondary' variant='text' startIcon={<Icon icon='mdi:arrow-left' fontSize={20}/>}>
                   Previous
                 </Button>
-                <Button color='primary' variant='contained' onClick={(e)=>console.log('h')} endIcon={<Icon icon='mdi:arrow-right' fontSize={20} />}>
+                <Button type='submit' color='primary' variant='contained' endIcon={<Icon icon='mdi:arrow-right' fontSize={20} />}>
                   Next
                 </Button>
               </Box>
@@ -202,7 +202,7 @@ const CreateAccountTwo = () => {
               <Typography sx={{ mr: 2, color: 'text.secondary' }}>Already have an account?</Typography>
               <Typography
                 component={Link}
-                href='/pages/auth/register-v1'
+                href='/login-email'
                 sx={{ color: 'primary.main', textDecoration: 'none' }}
               >
                 Sign in instead
