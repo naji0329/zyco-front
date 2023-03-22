@@ -1,3 +1,6 @@
+import { Amplify, Auth } from 'aws-amplify';
+import awsconfig from '../aws-exports'
+
 // ** React Imports
 import { ReactNode } from 'react'
 
@@ -6,10 +9,6 @@ import Head from 'next/head'
 import { Router } from 'next/router'
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
-
-
-
-
 
 // ** Loader Import
 import NProgress from 'nprogress'
@@ -75,6 +74,8 @@ type GuardProps = {
   guestGuard: boolean
   children: ReactNode
 }
+
+Amplify.configure(awsconfig);
 
 const clientSideEmotionCache = createEmotionCache()
 

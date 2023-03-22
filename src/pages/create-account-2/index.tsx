@@ -1,3 +1,6 @@
+//aws-amplify
+import { Auth } from 'aws-amplify'
+
 // ** ReactImports
 import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useState } from 'react'
 
@@ -34,10 +37,21 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import { useRouter } from 'next/router'
 import { Grid } from '@mui/material'
+import { useAuth } from 'src/hooks/useAuth'
+import { RegisterParams } from 'src/context/types'
 interface State {
   firstName: string,
   lastName: string,
   phoneNumber: string
+}
+
+type FormDataType = {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
+  username: string
+  password: string
 }
 
 // ** Styled Components
@@ -62,6 +76,8 @@ const CreateAccountTwo = () => {
 
   // ** Hook
   const theme = useTheme()
+  const auth = useAuth();
+  
 
   //router
   const router = useRouter();
@@ -76,8 +92,35 @@ const CreateAccountTwo = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push("/login-email");
+    
+    const authUser = auth.authUser;
+    if(authUser) {
+      const formData:FormDataType = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        phoneNumber: values.phoneNumber,
+        email: authUser.email,
+        password: authUser.password,
+        username: authUser.username
+      }
+      signUp(formData);
+    }
   }
+
+  async function signUp(formData: FormDataType) {
+    try {
+        const { user } = await Auth.signUp({
+            username: formData.email,
+            password: formData.password,
+            autoSignIn: { // optional - enables auto sign in after user is confirmed
+                enabled: true,
+            }
+        });
+        console.log(user);
+    } catch (error) {
+        console.log('error signing up:', error);
+    }
+}
 
   const goPrevious = () => {
     router.back();
@@ -173,9 +216,29 @@ const CreateAccountTwo = () => {
             <Typography variant='body2'>Create your Zyco account</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-            <TextField autoFocus fullWidth id='firstName' label='First name' sx={{ mb: 4 }} />
-            <TextField autoFocus fullWidth id='lastName' label='Last name' sx={{ mb: 4 }} />
-            <TextField autoFocus fullWidth id='phoneNumber' label='Phone number' sx={{ mb: 4 }} />
+            <TextField 
+              autoFocus 
+              fullWidth id='firstName' 
+              label='First name' 
+              sx={{ mb: 4 }} 
+              onChange={handleChange("firstName")}
+            />
+            <TextField 
+              autoFocus 
+              fullWidth 
+              id='lastName' 
+              label='Last name' 
+              sx={{ mb: 4 }} 
+              onChange={handleChange("lastName")}
+            />
+            <TextField 
+              autoFocus 
+              fullWidth 
+              id='phoneNumber' 
+              label='Phone number' 
+              sx={{ mb: 4 }} 
+              onChange={handleChange("phoneNumber")}  
+            />
 
             <Box
               sx={{ mb: 4 }}

@@ -9,7 +9,10 @@ export type LoginParams = {
 export type RegisterParams = {
   email: string
   username: string
-  password: string
+  password: string,
+  firstName: string,
+  lastName: string,
+  phoneNumber: string
 }
 
 export type UserDataType = {
@@ -23,11 +26,14 @@ export type UserDataType = {
 }
 
 export type AuthValuesType = {
+  authUser: RegisterParams | null,
+  setAuthUser: (value: RegisterParams) =>void,
   loading: boolean
   logout: () => void
   user: UserDataType | null
   setLoading: (value: boolean) => void
   setUser: (value: UserDataType | null) => void
   login: (params: LoginParams, errorCallback?: ErrCallbackType) => void
-  register: (params: RegisterParams, errorCallback?: ErrCallbackType) => void
+  register: (params: RegisterParams, errorCallback?: ErrCallbackType) => void,
+  createAccountNext: (params: RegisterParams, errorCallback?: ErrCallbackType) => void
 }

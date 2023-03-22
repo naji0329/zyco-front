@@ -15,13 +15,16 @@ import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataT
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
+  authUser: null,
+  setAuthUser: () => null,
   user: null,
   loading: true,
   setUser: () => null,
   setLoading: () => Boolean,
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
-  register: () => Promise.resolve()
+  register: () => Promise.resolve(),
+  createAccountNext: () => null
 }
 
 const AuthContext = createContext(defaultProvider)
@@ -34,6 +37,14 @@ const AuthProvider = ({ children }: Props) => {
   // ** States
   const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
+  const [authUser, setAuthUser] = useState<RegisterParams>({
+    username: '',
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: '',
+    phoneNumber: ''
+  });
 
   // ** Hooks
   const router = useRouter()
@@ -114,14 +125,22 @@ const AuthProvider = ({ children }: Props) => {
       .catch((err: { [key: string]: string }) => (errorCallback ? errorCallback(err) : null))
   }
 
+  const handleCreateAccountNext = (params: RegisterParams, errorCallback?: ErrCallbackType) => {
+    setAuthUser({...authUser, ...params})
+
+  }
+
   const values = {
+    authUser,
+    setAuthUser,
     user,
     loading,
     setUser,
     setLoading,
     login: handleLogin,
     logout: handleLogout,
-    register: handleRegister
+    register: handleRegister,
+    createAccountNext: handleCreateAccountNext
   }
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>
