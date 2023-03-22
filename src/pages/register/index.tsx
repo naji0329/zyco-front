@@ -137,20 +137,20 @@ const Register = () => {
 
   const onSubmit = (data: FormData) => {
     const { email, username, password } = data
-    register({ email, username, password }, err => {
-      if (err.email) {
-        setError('email', {
-          type: 'manual',
-          message: err.email
-        })
-      }
-      if (err.username) {
-        setError('username', {
-          type: 'manual',
-          message: err.username
-        })
-      }
-    })
+    // register({ email, username, password }, err => {
+    //   if (err.email) {
+    //     setError('email', {
+    //       type: 'manual',
+    //       message: err.email
+    //     })
+    //   }
+    //   if (err.username) {
+    //     setError('username', {
+    //       type: 'manual',
+    //       message: err.username
+    //     })
+    //   }
+    // })
   }
 
   const imageSource = skin === 'bordered' ? 'auth-v2-register-illustration-bordered' : 'auth-v2-register-illustration'

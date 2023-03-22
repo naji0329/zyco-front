@@ -33,10 +33,15 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import { useRouter } from 'next/router'
+import { FormHelperText } from '@mui/material'
+import { useAuth } from 'src/hooks/useAuth'
 interface State {
   username: string,
   email: string,
   password: string,
+  usernameError: string,
+  emailError: string,
+  passwordError: string,
   showPassword: boolean
 }
 
@@ -58,11 +63,15 @@ const CreateAccount = () => {
     username: '',
     email: '',
     password: '',
+    usernameError: '',
+    emailError: '',
+    passwordError: '',
     showPassword: false
   })
 
   // ** Hook
   const theme = useTheme()
+  const auth = useAuth()
 
   //router
   const router = useRouter();
@@ -77,10 +86,17 @@ const CreateAccount = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push("/create-account-2");
+    console.log(values)
+  
+    if(!values.usernameError && !values.passwordError && !values.emailError) {
+      auth.createAccountNext({username: values.username, email: values.email, password: values.password, firstName: '', lastName: '', phoneNumber: ''})
+      router.push("/create-account-2");
+    }
+    
   }
   
   const handleClickShowPassword = () => {
+    setValues({...values, showPassword: !values.showPassword})
     
   }
 
@@ -170,8 +186,28 @@ const CreateAccount = () => {
             <Typography variant='body2'>Create your Zyco account</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-            <TextField autoFocus fullWidth id='username' label='Username' sx={{ mb: 4 }} />
-            <TextField autoFocus fullWidth id='email' label='Email' sx={{ mb: 4 }} />
+            <TextField 
+              autoFocus 
+              fullWidth 
+              id='username' 
+              label='Username' 
+              sx={{ mb: 4 }} 
+              name='username'
+              onChange={handleChange("username")}
+              error={values.usernameError != ''}
+              helperText={values.usernameError}
+            />
+            <TextField 
+              autoFocus 
+              fullWidth 
+              id='email' 
+              label='Email' 
+              sx={{ mb: 4 }} 
+              name='email'
+              onChange={handleChange("email")}
+              error={values.emailError != ''}
+              helperText={values.emailError}
+            />
             <FormControl fullWidth>
               <InputLabel htmlFor='auth-login-password'>Password</InputLabel>
               <OutlinedInput
@@ -180,6 +216,8 @@ const CreateAccount = () => {
                 id='auth-login-password'
                 onChange={handleChange('password')}
                 type={values.showPassword ? 'text' : 'password'}
+                error={values.passwordError != ''}
+
                 endAdornment={
                   <InputAdornment position='end'>
                     <IconButton
@@ -193,6 +231,11 @@ const CreateAccount = () => {
                   </InputAdornment>
                 }
               />
+              {values.passwordError && (
+                <FormHelperText error id="auth-login-password-error">
+                  {values.passwordError}
+                </FormHelperText>
+              )}
             </FormControl>
             <Button type="submit" fullWidth size='large' variant='contained' sx={{ mb: 7, mt: 4 }}>
               NEXT
