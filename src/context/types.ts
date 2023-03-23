@@ -26,7 +26,7 @@ export type UserDataType = {
 }
 
 export type AuthValuesType = {
-  authUser: RegisterParams | null,
+  authUser: RegisterParams,
   setAuthUser: (value: RegisterParams) =>void,
   loading: boolean
   logout: () => void

@@ -1,5 +1,7 @@
 // ** ReactImports
-import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useState } from 'react'
+import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
+
+import validator from 'validator'
 
 // ** Next Import
 import Link from 'next/link'
@@ -35,6 +37,7 @@ import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import { useRouter } from 'next/router'
 import { FormHelperText } from '@mui/material'
 import { useAuth } from 'src/hooks/useAuth'
+import { validateEmail, validatePassword, validateRequired } from 'src/@core/utils/validator'
 interface State {
   username: string,
   email: string,
@@ -42,7 +45,8 @@ interface State {
   usernameError: string,
   emailError: string,
   passwordError: string,
-  showPassword: boolean
+  showPassword: boolean,
+  formSubmitted: boolean
 }
 
 // ** Styled Components
@@ -58,26 +62,55 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 }))
 
 const CreateAccount = () => {
+  const auth = useAuth()
   // ** State
-  const [values, setValues] = useState<State>({
-    username: '',
-    email: '',
-    password: '',
-    usernameError: '',
-    emailError: '',
-    passwordError: '',
-    showPassword: false
-  })
+  const [username, setUsername] = useState(auth.authUser.username || '');
+  const [email, setEmail] = useState(auth.authUser.email || '');
+  const [password, setPassword] = useState(auth.authUser.password || '');
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [formSubmitted, setFormSubmitted] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
+  const [submitData, setSubmitData] = useState(false);
 
   // ** Hook
   const theme = useTheme()
-  const auth = useAuth()
+
 
   //router
   const router = useRouter();
 
-  const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
+  //avoid useEffect from running on first mount(render)
+
+  const isFirstRender = useRef(true);
+
+  useEffect(()=>{
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if(!passwordError && !emailError && !usernameError) {
+      auth.createAccountNext({username, email, password, firstName: '', lastName: '', phoneNumber: ''});
+      router.push("/create-account-2")
+    }
+  }, [submitData])
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>, errorProp: keyof State) => {
+    if(formSubmitted) {
+      if(errorProp === 'passwordError') {
+        setPasswordError(validatePassword(event.target.value).message)
+      }else if(errorProp === 'emailError'){
+        if(validateRequired("email", event.target.value).message) {
+          setEmailError(validateRequired("email", event.target.value).message)
+        }else{
+          setEmailError(validateEmail(event.target.value).message);
+        }
+        
+      }else {
+        setUsernameError(validateRequired("username", event.target.value).message)
+      }
+    }
   }
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
@@ -86,18 +119,25 @@ const CreateAccount = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(values)
-  
-    if(!values.usernameError && !values.passwordError && !values.emailError) {
-      auth.createAccountNext({username: values.username, email: values.email, password: values.password, firstName: '', lastName: '', phoneNumber: ''})
-      router.push("/create-account-2");
+    setFormSubmitted(true);
+    if(validatePassword(password).error === true) {
+      setPasswordError(validatePassword(password).message)
     }
-    
+    if(validateRequired('email',email).error === true) {
+      if(validateRequired('email', email).message) {
+        setEmailError(validateRequired('email', email).message)
+      }else{
+        setEmailError(validateEmail('email').message)
+      }
+    }
+    if(validateRequired('username', username).error === true) {
+      setUsernameError(validateRequired('username', username).message)
+    }
+    setSubmitData(true)
   }
   
   const handleClickShowPassword = () => {
-    setValues({...values, showPassword: !values.showPassword})
-    
+    setShowPassword(!showPassword)
   }
 
   return (
@@ -189,34 +229,45 @@ const CreateAccount = () => {
             <TextField 
               autoFocus 
               fullWidth 
+              value={username}
               id='username' 
               label='Username' 
               sx={{ mb: 4 }} 
               name='username'
-              onChange={handleChange("username")}
-              error={values.usernameError != ''}
-              helperText={values.usernameError}
+              onChange={(e: ChangeEvent<HTMLInputElement>)=>{
+                setUsername(e.target.value);
+                handleChange(e, "usernameError")
+              }}
+              error={usernameError ? true:false}
+              helperText={usernameError}
             />
             <TextField 
               autoFocus 
               fullWidth 
+              value={email}
               id='email' 
               label='Email' 
               sx={{ mb: 4 }} 
               name='email'
-              onChange={handleChange("email")}
-              error={values.emailError != ''}
-              helperText={values.emailError}
+              onChange={(e: ChangeEvent<HTMLInputElement>)=>{
+                setEmail(e.target.value);
+                handleChange(e, "emailError")
+              }}
+              error={emailError ? true:false}
+              helperText={emailError}
             />
             <FormControl fullWidth>
               <InputLabel htmlFor='auth-login-password'>Password</InputLabel>
               <OutlinedInput
                 label='Password'
-                value={values.password}
+                value={password}
                 id='auth-login-password'
-                onChange={handleChange('password')}
-                type={values.showPassword ? 'text' : 'password'}
-                error={values.passwordError != ''}
+                onChange={(e: ChangeEvent<HTMLInputElement>)=>{
+                  setPassword(e.target.value);
+                  handleChange(e, "passwordError")
+                }}
+                type={showPassword ? 'text' : 'password'}
+                error={passwordError ? true: false}
 
                 endAdornment={
                   <InputAdornment position='end'>
@@ -226,14 +277,14 @@ const CreateAccount = () => {
                       onMouseDown={handleMouseDownPassword}
                       aria-label='toggle password visibility'
                     >
-                      <Icon icon={values.showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                      <Icon icon={showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
                     </IconButton>
                   </InputAdornment>
                 }
               />
-              {values.passwordError && (
+              {passwordError && (
                 <FormHelperText error id="auth-login-password-error">
-                  {values.passwordError}
+                  {passwordError}
                 </FormHelperText>
               )}
             </FormControl>

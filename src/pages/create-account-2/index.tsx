@@ -2,7 +2,7 @@
 import { Auth } from 'aws-amplify'
 
 // ** ReactImports
-import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useState } from 'react'
+import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -39,10 +39,14 @@ import { useRouter } from 'next/router'
 import { Grid } from '@mui/material'
 import { useAuth } from 'src/hooks/useAuth'
 import { RegisterParams } from 'src/context/types'
+import { validatePhoneNumber, validateRequired } from 'src/@core/utils/validator'
 interface State {
   firstName: string,
   lastName: string,
-  phoneNumber: string
+  phoneNumber: string,
+  firstNameError: string,
+  lastNameError: string,
+  phoneNumberError: string
 }
 
 type FormDataType = {
@@ -68,11 +72,14 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 
 const CreateAccountTwo = () => {
   // ** State
-  const [values, setValues] = useState<State>({
-    firstName: '',
-    lastName: '',
-    phoneNumber: ''
-  })
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [firstNameError, setFirstNameError] = useState('');
+  const [lastNameError, setLastNameError] = useState('');
+  const [phoneNumberError, setPhoneNumberError] = useState('');
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [submitData, setSubmitData] = useState(false);
 
   // ** Hook
   const theme = useTheme()
@@ -82,8 +89,33 @@ const CreateAccountTwo = () => {
   //router
   const router = useRouter();
 
-  const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
+  const isFirstRender = useRef(true);
+
+  useEffect(()=>{
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if(!firstNameError && !lastNameError && !phoneNumberError) {
+      const authUser = auth.authUser;
+      auth.register({firstName, lastName, phoneNumber, email: authUser.email, username: authUser.username, password: authUser.password})
+    }
+  }, [submitData])
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>, errorProp: keyof State) => {
+    if(formSubmitted) {
+      if(errorProp === 'firstNameError') {
+        setFirstNameError(validateRequired("First name", event.target.value).message)
+      }else if(errorProp === 'lastNameError'){
+        setLastNameError(validateRequired("Last name", event.target.value).message)
+      }else {
+        if(validateRequired('Phone number', phoneNumber).message) {
+          setPhoneNumberError(validateRequired('Phone number', event.target.value).message)
+        }else{
+          setPhoneNumberError(validatePhoneNumber(event.target.value).message)
+        }
+      }
+    }
   }
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
@@ -92,42 +124,24 @@ const CreateAccountTwo = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    const authUser = auth.authUser;
-    if(authUser) {
-      const formData:FormDataType = {
-        firstName: values.firstName,
-        lastName: values.lastName,
-        phoneNumber: values.phoneNumber,
-        email: authUser.email,
-        password: authUser.password,
-        username: authUser.username
-      }
-      signUp(formData);
-    }
-  }
+    setFormSubmitted(true);
 
-  async function signUp(formData: FormDataType) {
-    try {
-        const { user } = await Auth.signUp({
-            username: formData.email,
-            password: formData.password,
-            autoSignIn: { // optional - enables auto sign in after user is confirmed
-                enabled: true,
-            }
-        });
-        console.log(user);
-    } catch (error) {
-        console.log('error signing up:', error);
+    if(validateRequired("First name", firstName).error === true) {
+      setFirstNameError(validateRequired("First name", firstName).message)
     }
-}
+    
+    if(validateRequired("Last name", lastName).error === true) {
+      setLastNameError(validateRequired("Last name", lastName).message)
+    }
+
+    if(validateRequired("Phone number", phoneNumber).error === true) {
+      setPhoneNumberError(validateRequired("Phone number", phoneNumber).message)
+    }
+    setSubmitData(true)
+  }
 
   const goPrevious = () => {
     router.back();
-  }
-  
-  const handleClickShowPassword = () => {
-    
   }
 
   return (
@@ -221,7 +235,13 @@ const CreateAccountTwo = () => {
               fullWidth id='firstName' 
               label='First name' 
               sx={{ mb: 4 }} 
-              onChange={handleChange("firstName")}
+              value={firstName}
+              onChange={(e: ChangeEvent<HTMLInputElement>)=>{
+                setFirstName(e.target.value);
+                handleChange(e, "firstNameError")
+              }}
+              error={firstNameError ? true:false}
+              helperText={firstNameError}
             />
             <TextField 
               autoFocus 
@@ -229,15 +249,27 @@ const CreateAccountTwo = () => {
               id='lastName' 
               label='Last name' 
               sx={{ mb: 4 }} 
-              onChange={handleChange("lastName")}
+              value={lastName}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setLastName(e.target.value);
+                handleChange(e, "lastNameError")
+              }}
+              error={lastNameError ? true:false}
+              helperText={lastNameError}
             />
             <TextField 
               autoFocus 
               fullWidth 
               id='phoneNumber' 
-              label='Phone number' 
+              label='Phone number with country code(+123)' 
               sx={{ mb: 4 }} 
-              onChange={handleChange("phoneNumber")}  
+              value={phoneNumber}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setPhoneNumber(e.target.value);
+                handleChange(e, "phoneNumberError")
+              }}  
+              error={phoneNumberError ? true:false}
+              helperText={phoneNumberError}
             />
 
             <Box
