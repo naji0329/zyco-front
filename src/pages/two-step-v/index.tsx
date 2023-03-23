@@ -252,9 +252,9 @@ const TwoStepV = () => {
               {`Two Step Verification 💬`}
             </Typography>
             <Typography sx={{ color: 'text.secondary' }}>
-              We sent a verification code to your {reset === 'email' ? 'email':'mobile'}. Enter the code from the {reset === 'email' ? 'email':'mobile'} in the field below.
+              We sent a verification code to your {reset === 'email' ? 'email':'email'}. Enter the code from the {reset === 'email' ? 'email':'email'} in the field below.
             </Typography>
-            <Typography sx={{ mt: 2, fontWeight: 700 }}>******1234</Typography>
+            <Typography sx={{ mt: 2, fontWeight: 700 }}>******gmail.com</Typography>
           </Box>
           <form onSubmit={onSubmitForm}>
             <CleaveWrapper

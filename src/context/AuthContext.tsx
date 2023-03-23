@@ -12,10 +12,18 @@ import authConfig from 'src/configs/auth'
 
 // ** Types
 import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
+import { Auth } from 'aws-amplify'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
-  authUser: null,
+  authUser: {
+    username: '',
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: '',
+    phoneNumber: ''
+  },
   setAuthUser: () => null,
   user: null,
   loading: true,
@@ -112,17 +120,39 @@ const AuthProvider = ({ children }: Props) => {
     router.push('/login')
   }
 
-  const handleRegister = (params: RegisterParams, errorCallback?: ErrCallbackType) => {
-    axios
-      .post(authConfig.registerEndpoint, params)
-      .then(res => {
-        if (res.data.error) {
-          if (errorCallback) errorCallback(res.data.error)
-        } else {
-          handleLogin({ email: params.email, password: params.password })
+  const handleRegister = async (params: RegisterParams, errorCallback?: ErrCallbackType) => {
+    try {
+        const { user } = await Auth.signUp({
+            username: params.email || params.phoneNumber,
+            password: params.password,
+            // attributes: {
+            //   firstName: params.firstName,
+            //   lastName: params.lastName,
+            //   phoneNumber: params.phoneNumber,
+            //   email: params.email,
+            //   password: params.password,
+            //   username: params.username
+            // },
+            autoSignIn: { // optional - enables auto sign in after user is confirmed
+              enabled: true,
+            }
+        });
+        if(user) {
+          router.push("/two-step-v");
         }
-      })
-      .catch((err: { [key: string]: string }) => (errorCallback ? errorCallback(err) : null))
+    } catch (error) {
+        console.log('error signing up:', error);
+    }
+    // axios
+    //   .post(authConfig.registerEndpoint, params)
+    //   .then(res => {
+    //     if (res.data.error) {
+    //       if (errorCallback) errorCallback(res.data.error)
+    //     } else {
+    //       handleLogin({ email: params.email, password: params.password })
+    //     }
+    //   })
+    //   .catch((err: { [key: string]: string }) => (errorCallback ? errorCallback(err) : null))
   }
 
   const handleCreateAccountNext = (params: RegisterParams, errorCallback?: ErrCallbackType) => {
