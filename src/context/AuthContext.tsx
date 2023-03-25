@@ -13,9 +13,16 @@ import authConfig from 'src/configs/auth'
 // ** Types
 import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
 import { Auth } from 'aws-amplify'
+import { toast } from 'react-hot-toast'
+import { Message } from '@mui/icons-material'
+import getError from 'src/@core/utils/get-toast-error'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
+  loginUser: {
+    phoneOrEmail: '',
+    password: ''
+  },
   authUser: {
     username: '',
     email: '',
@@ -32,7 +39,8 @@ const defaultProvider: AuthValuesType = {
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   register: () => Promise.resolve(),
-  createAccountNext: () => null
+  createAccountNext: () => null,
+  loginNext: () => null
 }
 
 const AuthContext = createContext(defaultProvider)
@@ -45,14 +53,28 @@ const AuthProvider = ({ children }: Props) => {
   // ** States
   const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
+  const [defaultAuthUser, setDefaultUser] = useState<any>(null);
+  const [defaultLoginUser, setDefaultLoginUser] = useState<any>(null);
+  useEffect(()=>{
+    if(typeof window != undefined) {
+      setDefaultUser(window.localStorage.getItem("authUser"))
+      setDefaultLoginUser(window.localStorage.getItem("loginUser"))
+    }
+  }, [])
+  
   const [authUser, setAuthUser] = useState<RegisterParams>({
-    username: '',
-    email: '',
-    password: '',
-    firstName: '',
-    lastName: '',
-    phoneNumber: ''
+    username: defaultAuthUser && (JSON.parse(defaultAuthUser ? defaultAuthUser:'')).username || '',
+    email: defaultAuthUser && (JSON.parse(defaultAuthUser ? defaultAuthUser:'')).email || '',
+    password: defaultAuthUser && (JSON.parse(defaultAuthUser ? defaultAuthUser:'')).password || '',
+    firstName: defaultAuthUser && (JSON.parse(defaultAuthUser ? defaultAuthUser:'')).firstName || '',
+    lastName: defaultAuthUser && (JSON.parse(defaultAuthUser ? defaultAuthUser:'')).lastName || '',
+    phoneNumber: defaultAuthUser && (JSON.parse(defaultAuthUser ? defaultAuthUser:'')).phoneNumber || ''
   });
+
+  const [loginUser, setLoginUser] = useState<LoginParams>({
+    phoneOrEmail: defaultLoginUser && (JSON.parse(defaultLoginUser ? defaultLoginUser:'')).phoneOrEmail || '',
+    password: defaultLoginUser && (JSON.parse(defaultLoginUser ? defaultLoginUser:'')).password || ''
+  })
 
   // ** Hooks
   const router = useRouter()
@@ -91,26 +113,31 @@ const AuthProvider = ({ children }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
-    axios
-      .post(authConfig.loginEndpoint, params)
-      .then(async response => {
-        params.rememberMe
-          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
-          : null
-        const returnUrl = router.query.returnUrl
-
-        setUser({ ...response.data.userData })
-        params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.userData)) : null
-
-        const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
-
-        router.replace(redirectURL as string)
+  const handleLogin = async (params: LoginParams, errorCallback?: ErrCallbackType) => {
+    setLoading(true);
+    try{
+      console.log(params)
+      const user = await Auth.signIn({
+        username: params.phoneOrEmail,
+        password: params.password
       })
-
-      .catch(err => {
-        if (errorCallback) errorCallback(err)
-      })
+      const dbUser = {
+        id: user.attributes.sub,
+        firstName: user.attributes.family_name,
+        lastName: user.attributes.given_name,
+        username: user.attributes.nickname,
+        email: user.attributes.email,
+        phoneNumber: user.attributes.phoneNumber,
+        role: 'client'
+      }
+      setUser(dbUser);
+      localStorage.setItem("userData", JSON.stringify(dbUser))
+      router.push("/");
+    }catch(error) {
+      console.log(error)
+      toast.error(getError(`${error}`));
+    }
+    setLoading(false)
   }
 
   const handleLogout = () => {
@@ -122,45 +149,47 @@ const AuthProvider = ({ children }: Props) => {
 
   const handleRegister = async (params: RegisterParams, errorCallback?: ErrCallbackType) => {
     try {
+      setAuthUser({...authUser, ...params})
+      localStorage.setItem("authUser", JSON.stringify(params));
+      setLoading(true);
         const { user } = await Auth.signUp({
             username: params.email || params.phoneNumber,
             password: params.password,
-            // attributes: {
-            //   firstName: params.firstName,
-            //   lastName: params.lastName,
-            //   phoneNumber: params.phoneNumber,
-            //   email: params.email,
-            //   password: params.password,
-            //   username: params.username
-            // },
+            attributes: {
+              given_name: params.firstName,
+              family_name: params.lastName,
+              phone_number: params.phoneNumber,
+              email: params.email,
+              nickname: params.username
+            },
             autoSignIn: { // optional - enables auto sign in after user is confirmed
               enabled: true,
             }
         });
         if(user) {
-          router.push("/two-step-v");
+          setLoading(false);
+          router.push(`/two-step-v`);
         }
     } catch (error) {
-        console.log('error signing up:', error);
+      console.log(error);
+      toast.error(getError(`${error}`));
+      setLoading(false);
     }
-    // axios
-    //   .post(authConfig.registerEndpoint, params)
-    //   .then(res => {
-    //     if (res.data.error) {
-    //       if (errorCallback) errorCallback(res.data.error)
-    //     } else {
-    //       handleLogin({ email: params.email, password: params.password })
-    //     }
-    //   })
-    //   .catch((err: { [key: string]: string }) => (errorCallback ? errorCallback(err) : null))
+    setLoading(false)
   }
 
   const handleCreateAccountNext = (params: RegisterParams, errorCallback?: ErrCallbackType) => {
     setAuthUser({...authUser, ...params})
+    localStorage.setItem("authUser", JSON.stringify({...authUser, ...params}));
+  }
 
+  const handleLoginNext = (params: LoginParams) => {
+    setLoginUser({...loginUser, ...params});
+    localStorage.setItem("loginUser", JSON.stringify({...loginUser, ...params}));
   }
 
   const values = {
+    loginUser,
     authUser,
     setAuthUser,
     user,
@@ -170,7 +199,8 @@ const AuthProvider = ({ children }: Props) => {
     login: handleLogin,
     logout: handleLogout,
     register: handleRegister,
-    createAccountNext: handleCreateAccountNext
+    createAccountNext: handleCreateAccountNext,
+    loginNext: handleLoginNext
   }
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>

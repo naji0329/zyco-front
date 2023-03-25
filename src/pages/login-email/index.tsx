@@ -1,5 +1,5 @@
 // ** ReactImports
-import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useState } from 'react'
+import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -33,6 +33,8 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import { useRouter } from 'next/router'
+import { validateRequired } from 'src/@core/utils/validator'
+import { useAuth } from 'src/hooks/useAuth'
 interface State {
   phoneOrEmail: string
 }
@@ -50,19 +52,41 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 }))
 
 const LoginEmailPage = () => {
-  // ** State
-  const [values, setValues] = useState<State>({
-    phoneOrEmail: ''
-  })
 
-  // ** Hook
-  const theme = useTheme()
+    // ** Hook
+    const theme = useTheme()
+    const auth = useAuth()
+
+  // ** State
+  const [phoneOrEmail, setPhoneOrEmail] = useState(auth.loginUser.phoneOrEmail || '');
+  const [phoneOrEmailError, setPhoneOrEmailError] = useState('');
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  //helps in useEffect to know form has been submitted successfully
+  const [submitData, setSubmitData] = useState(false);
 
   //router
   const router = useRouter();
 
-  const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
+  const isFirstRender = useRef(true);
+
+  useEffect(()=>{
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if(!phoneOrEmailError) {
+      const loginUser = auth.loginUser;
+      auth.loginNext({phoneOrEmail: phoneOrEmail, password: loginUser.password})
+      router.push("/login-password")
+    }
+  }, [submitData])
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPhoneOrEmail(e.target.value);
+    if(formSubmitted) {
+      setPhoneOrEmailError(validateRequired("Phone or email", phoneOrEmail).message);
+    }
   }
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
@@ -71,7 +95,12 @@ const LoginEmailPage = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push("/login-password");
+
+    setFormSubmitted(true)
+    if(validateRequired("Phone or email", phoneOrEmail).error === true) {
+      setPhoneOrEmailError(validateRequired("Phone or email", phoneOrEmail).message);
+    }
+    setSubmitData(!submitData);
   }
   
   return (
@@ -160,29 +189,16 @@ const LoginEmailPage = () => {
             <Typography variant='body2'>Please sign-in to your Zyco account</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-            <TextField autoFocus fullWidth id='phoneOrEmail' label='Phone or email' sx={{ mb: 4 }} />
-            {/* <FormControl fullWidth>
-              <InputLabel htmlFor='auth-login-password'>Password</InputLabel>
-              <OutlinedInput
-                label='Password'
-                value={values.password}
-                id='auth-login-password'
-                onChange={handleChange('password')}
-                type={values.showPassword ? 'text' : 'password'}
-                endAdornment={
-                  <InputAdornment position='end'>
-                    <IconButton
-                      edge='end'
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      aria-label='toggle password visibility'
-                    >
-                      <Icon icon={values.showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl> */}
+            <TextField 
+              autoFocus 
+              fullWidth 
+              value={phoneOrEmail}
+              onChange={(e: ChangeEvent<HTMLInputElement>)=>handleChange(e)}
+              id='phoneOrEmail' 
+              label='Phone or email' 
+              error={phoneOrEmailError ? true:false}
+              helperText={phoneOrEmailError}
+              sx={{ mb: 4 }} />
             <Box
               sx={{ mb: 4, display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}
             >

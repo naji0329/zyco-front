@@ -91,7 +91,7 @@ const CreateAccount = () => {
       return;
     }
     if(!passwordError && !emailError && !usernameError) {
-      auth.createAccountNext({username, email, password, firstName: '', lastName: '', phoneNumber: ''});
+      auth.createAccountNext({username, email, password, firstName: auth.authUser.firstName, lastName: auth.authUser.lastName, phoneNumber: auth.authUser.phoneNumber});
       router.push("/create-account-2")
     }
   }, [submitData])
@@ -133,7 +133,7 @@ const CreateAccount = () => {
     if(validateRequired('username', username).error === true) {
       setUsernameError(validateRequired('username', username).message)
     }
-    setSubmitData(true)
+    setSubmitData(!submitData)
   }
   
   const handleClickShowPassword = () => {
