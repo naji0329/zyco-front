@@ -71,20 +71,19 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 }))
 
 const CreateAccountTwo = () => {
+    // ** Hook
+    const theme = useTheme()
+    const auth = useAuth();
+
   // ** State
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [firstName, setFirstName] = useState(auth.authUser.firstName || '');
+  const [lastName, setLastName] = useState(auth.authUser.lastName || '');
+  const [phoneNumber, setPhoneNumber] = useState(auth.authUser.phoneNumber || '');
   const [firstNameError, setFirstNameError] = useState('');
   const [lastNameError, setLastNameError] = useState('');
   const [phoneNumberError, setPhoneNumberError] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [submitData, setSubmitData] = useState(false);
-
-  // ** Hook
-  const theme = useTheme()
-  const auth = useAuth();
-  
 
   //router
   const router = useRouter();
@@ -137,7 +136,7 @@ const CreateAccountTwo = () => {
     if(validateRequired("Phone number", phoneNumber).error === true) {
       setPhoneNumberError(validateRequired("Phone number", phoneNumber).message)
     }
-    setSubmitData(true)
+    setSubmitData(!submitData)
   }
 
   const goPrevious = () => {
@@ -288,7 +287,7 @@ const CreateAccountTwo = () => {
                   Previous
                 </Button>
                 <Button type='submit' color='primary' variant='contained' endIcon={<Icon icon='mdi:arrow-right' fontSize={20} />}>
-                  Next
+                  {auth.loading ? 'Loading...':'Next'}
                 </Button>
               </Box>
             </Grid>

@@ -1,5 +1,5 @@
 // ** ReactImports
-import { ChangeEvent, FormEvent, MouseEvent, ReactNode, useState } from 'react'
+import { ChangeEvent, FormEvent, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -35,6 +35,8 @@ import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import ChipsIcon from 'src/views/components/chips/ChipsIcon'
 import { Grid } from '@mui/material'
 import { useRouter } from 'next/router'
+import { validateRequired } from 'src/@core/utils/validator'
+import { useAuth } from 'src/hooks/useAuth'
 interface State {
   password: string
   showPassword: boolean
@@ -52,25 +54,48 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
   }
 }))
 
-const LoginEmailPage = () => {
-  // ** State
-  const [values, setValues] = useState<State>({
-    password: '',
-    showPassword: false
-  })
+const LoginPasswordPage = () => {
+      // ** Hook
+      const theme = useTheme()
+      const auth = useAuth()
+  
+    // ** State
+    const [password, setPassword] = useState(auth.loginUser.password || '');
+    const [passwordError, setPasswordError] = useState('');
+    const [formSubmitted, setFormSubmitted] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+  
+    //helps in useEffect to know form has been submitted successfully
+    const [submitData, setSubmitData] = useState(false);
+  
+    //router
+    const router = useRouter();
+  
+    const isFirstRender = useRef(true);
+    const inputRef = useRef<HTMLInputElement>(null);
+  
+    useEffect(()=>{
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+        return;
+      }
+      console.log("helloworld");
+      if(!passwordError) {
+        const loginData = auth.loginUser;
+        auth.login({phoneOrEmail: loginData.phoneOrEmail, password: password});
+      }
+    }, [submitData])
+  
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setPassword(e.target.value);
+      if(formSubmitted) {
+        setPasswordError(validateRequired("Password", e.target.value).message);
+      }
+    }
 
-  //router
-  const router = useRouter();
-
-  // ** Hook
-  const theme = useTheme()
-
-  const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
 
   const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword })
+    
   }
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
@@ -84,7 +109,13 @@ const LoginEmailPage = () => {
   
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push("/two-step-v")
+    setFormSubmitted(true);
+
+    if(validateRequired("Password", password).error === true) {
+      setPasswordError(validateRequired("Password", password).message)
+    }
+
+    setSubmitData(!submitData)
   }
 
   return (
@@ -173,7 +204,18 @@ const LoginEmailPage = () => {
             <Typography variant='body2'>To continue, first verify that it's you</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-            <TextField type="Password" autoFocus fullWidth id='password' label='Password' sx={{ mb: 4 }} />
+            <TextField 
+              type={showPassword ? 'text':'password'} 
+              autoFocus 
+              fullWidth 
+              id='password' 
+              label='Password' 
+              value={password}
+              onChange={(e: ChangeEvent<HTMLInputElement>)=>handleChange(e)}
+              sx={{ mb: 4 }} 
+              error={passwordError ? true:false}
+              helperText={passwordError}
+              ref ={inputRef} />
             <Box
               sx={{ mb: 4, display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}
             >
@@ -181,6 +223,7 @@ const LoginEmailPage = () => {
                 label='Show password'
                 control={<Checkbox />}
                 sx={{ '& .MuiFormControlLabel-label': { color: 'text.primary' } }}
+                onClick={()=>setShowPassword(!showPassword)}
               />
               <Typography
                 variant='body2'
@@ -210,8 +253,8 @@ const LoginEmailPage = () => {
   )
 }
 
-LoginEmailPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+LoginPasswordPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-LoginEmailPage.guestGuard = true
+LoginPasswordPage.guestGuard = true
 
-export default LoginEmailPage
+export default LoginPasswordPage

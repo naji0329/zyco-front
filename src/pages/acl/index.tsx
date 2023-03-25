@@ -10,19 +10,23 @@ import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
+import { useAuth } from 'src/hooks/useAuth'
 
 const ACLPage = () => {
   // ** Hooks
   const ability = useContext(AbilityContext)
 
+  //auth
+  const auth = useAuth();
+
   return (
     <Grid container spacing={6}>
       <Grid item md={6} xs={12}>
         <Card>
-          <CardHeader title='Common' />
+          <CardHeader title={`${auth.user?.firstName + " " + auth.user?.lastName}`} />
           <CardContent>
-            <Typography sx={{ mb: 4 }}>No ability is required to view this card</Typography>
-            <Typography sx={{ color: 'primary.main' }}>This card is visible to 'user' and 'admin' both</Typography>
+            <Typography sx={{ mb: 4 }}>This page shows you are signed in</Typography>
+            <Typography sx={{ color: 'primary.main' }}>Hello {auth.user?.firstName}</Typography>
           </CardContent>
         </Card>
       </Grid>

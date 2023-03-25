@@ -1,5 +1,5 @@
 // ** React Imports
-import { ReactNode, ChangeEvent, useState, KeyboardEvent, FormEvent } from 'react'
+import { ReactNode, ChangeEvent, useState, KeyboardEvent, FormEvent, use } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -39,6 +39,9 @@ import { useRouter } from 'next/router'
 import 'cleave.js/dist/addons/cleave-phone.us'
 import { Grid } from '@mui/material'
 import { Icon } from '@iconify/react'
+import { Auth } from 'aws-amplify'
+import { toast } from 'react-hot-toast'
+import { useAuth } from 'src/hooks/useAuth'
 interface State {
   phoneOrEmail: string
 }
@@ -94,6 +97,7 @@ const TwoStepV = () => {
     handleSubmit,
     formState: { errors }
   } = useForm({ defaultValues })
+  const auth = useAuth()
 
   // ** Vars
   const errorsArray = Object.keys(errors)
@@ -153,19 +157,33 @@ const TwoStepV = () => {
     ))
   }
 
-  const onSubmitForm = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if(reset === "password") {
-      router.push("/reset-password");
-    }else if(reset === "email") {
-      router.push("/choose-account")
-    }else{
-      router.push("/reset-password")
+  const goPrevious = () => {
+    router.back();
+  }
+
+  const resendVerification = async () => {
+    try {
+      await Auth.resendSignUp(auth.authUser.email);
+      toast.success('Code resent successfully');
+    }catch(err) {
+      toast.error(`Error resending code`);
     }
   }
 
-  const goPrevious = () => {
-    router.back();
+  async function confirmSignUp(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    let code = "";
+    console.log(control._fields)
+    for (const key in control._fields) {
+      code += control._fields[key]?._f.value;
+    }
+    try {
+      await Auth.confirmSignUp(auth.authUser.email, code);
+      toast.success("confirmed")
+      router.push("/login-email")
+    } catch (error) {
+      toast.error('confirm sign up failed')
+    }
   }
 
   return (
@@ -256,7 +274,7 @@ const TwoStepV = () => {
             </Typography>
             <Typography sx={{ mt: 2, fontWeight: 700 }}>******gmail.com</Typography>
           </Box>
-          <form onSubmit={onSubmitForm}>
+          <form onSubmit={confirmSignUp}>
             <CleaveWrapper
               sx={{
                 display: 'flex',
@@ -288,7 +306,7 @@ const TwoStepV = () => {
           </form>
           <Box sx={{ mt: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Typography sx={{ color: 'text.secondary' }}>Didn't get the code?</Typography>
-            <LinkStyled href='/' onClick={e => e.preventDefault()}>
+            <LinkStyled href='#' onClick={resendVerification}>
               Resend
             </LinkStyled>
           </Box>
