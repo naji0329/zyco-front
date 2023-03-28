@@ -14,6 +14,12 @@ export type RegisterParams = {
   phoneNumber: string
 }
 
+export type ResetParams = {
+  phoneOrEmail: string,
+  code: string,
+  new_password: string
+}
+
 export type UserDataType = {
   id: number
   firstName: string
@@ -27,6 +33,7 @@ export type AuthValuesType = {
   loginUser: LoginParams,
   authUser: RegisterParams,
   setAuthUser: (value: RegisterParams) =>void,
+  resetUser: ResetParams,
   loading: boolean
   logout: () => void
   user: UserDataType | null
@@ -34,6 +41,8 @@ export type AuthValuesType = {
   setUser: (value: UserDataType | null) => void
   login: (params: LoginParams, errorCallback?: ErrCallbackType) => void
   register: (params: RegisterParams, errorCallback?: ErrCallbackType) => void,
+  resetPassword: (params: ResetParams, errorCallback?: ErrCallbackType) => void,
   createAccountNext: (params: RegisterParams, errorCallback?: ErrCallbackType) => void,
-  loginNext: (params: LoginParams, errorCallback?: ErrCallbackType) => void
+  loginNext: (params: LoginParams, errorCallback?: ErrCallbackType) => void,
+  handleForgotPasswordNext: (params: ResetParams, errorCallback?: ErrCallbackType) => void
 }

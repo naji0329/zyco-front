@@ -178,12 +178,14 @@ const TwoStepV = () => {
       code += control._fields[key]?._f.value;
     }
     try {
+      auth.setLoading(true)
       await Auth.confirmSignUp(auth.authUser.email, code);
       toast.success("confirmed")
       router.push("/login-email")
     } catch (error) {
       toast.error('confirm sign up failed')
     }
+    auth.setLoading(false)
   }
 
   return (

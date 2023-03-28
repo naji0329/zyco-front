@@ -11,11 +11,12 @@ import axios from 'axios'
 import authConfig from 'src/configs/auth'
 
 // ** Types
-import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
+import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType, ResetParams } from './types'
 import { Auth } from 'aws-amplify'
 import { toast } from 'react-hot-toast'
 import { Message } from '@mui/icons-material'
 import getError from 'src/@core/utils/get-toast-error'
+import isEmail from 'validator/lib/isEmail'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -31,6 +32,11 @@ const defaultProvider: AuthValuesType = {
     lastName: '',
     phoneNumber: ''
   },
+  resetUser: {
+    phoneOrEmail: '',
+    code: '',
+    new_password: ''
+  },
   setAuthUser: () => null,
   user: null,
   loading: true,
@@ -39,8 +45,10 @@ const defaultProvider: AuthValuesType = {
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   register: () => Promise.resolve(),
+  resetPassword: () => Promise.resolve(),
   createAccountNext: () => null,
-  loginNext: () => null
+  loginNext: () => null,
+  handleForgotPasswordNext: () => null
 }
 
 const AuthContext = createContext(defaultProvider)
@@ -51,14 +59,19 @@ type Props = {
 
 const AuthProvider = ({ children }: Props) => {
   // ** States
-  const [user, setUser] = useState<UserDataType | null>(defaultProvider.user)
+
+  const [user, setUser] = useState<UserDataType | null>(null);
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
-  const [defaultAuthUser, setDefaultUser] = useState<any>(null);
+  const [defaultAuthUser, setDefaultAuthUser] = useState<any>(null);
   const [defaultLoginUser, setDefaultLoginUser] = useState<any>(null);
+  const [defaultResetUser, setDefaultResetUser] = useState<any>(null);
   useEffect(()=>{
     if(typeof window != undefined) {
-      setDefaultUser(window.localStorage.getItem("authUser"))
+      setDefaultAuthUser(window.localStorage.getItem("authUser"))
       setDefaultLoginUser(window.localStorage.getItem("loginUser"))
+      const userJson = localStorage.getItem("userData");
+      setUser(userJson !== null ? JSON.parse(userJson):null);
+      setDefaultResetUser(window.localStorage.getItem("resetUser"));
     }
   }, [])
   
@@ -74,6 +87,12 @@ const AuthProvider = ({ children }: Props) => {
   const [loginUser, setLoginUser] = useState<LoginParams>({
     phoneOrEmail: defaultLoginUser && (JSON.parse(defaultLoginUser ? defaultLoginUser:'')).phoneOrEmail || '',
     password: defaultLoginUser && (JSON.parse(defaultLoginUser ? defaultLoginUser:'')).password || ''
+  })
+
+  const [resetUser, setResetUser] = useState<ResetParams>({
+    phoneOrEmail: defaultResetUser && (JSON.parse(defaultResetUser ? defaultResetUser:'')).phoneOrEmail || '',
+    code: defaultResetUser && (JSON.parse(defaultResetUser ? defaultResetUser:'')).code || '',
+    new_password: defaultResetUser && (JSON.parse(defaultResetUser ? defaultResetUser:'')).new_password || '',
   })
 
   // ** Hooks
@@ -115,12 +134,13 @@ const AuthProvider = ({ children }: Props) => {
 
   const handleLogin = async (params: LoginParams, errorCallback?: ErrCallbackType) => {
     setLoading(true);
+
     try{
-      console.log(params)
-      const user = await Auth.signIn({
+      const userCredentials:any = {
         username: params.phoneOrEmail,
         password: params.password
-      })
+      }
+      const user = await Auth.signIn(userCredentials);
       const dbUser = {
         id: user.attributes.sub,
         firstName: user.attributes.family_name,
@@ -188,19 +208,49 @@ const AuthProvider = ({ children }: Props) => {
     localStorage.setItem("loginUser", JSON.stringify({...loginUser, ...params}));
   }
 
+  const handleForgotPasswordNext = async (params: ResetParams) => {
+    setResetUser({...resetUser, ...params});
+    localStorage.setItem("resetUser", JSON.stringify({...resetUser, ...params}));
+    try{
+      setLoading(true)
+      await Auth.forgotPassword(params.phoneOrEmail);
+      toast.success("Verification code sent");
+      router.push("/reset-password");
+    }catch(error) {
+      toast.error(getError(`${error}`));
+    }
+    setLoading(false);
+  }
+
+  const resetPassword = async (params: ResetParams) => {
+    try{
+      console.log("reset")
+      console.log(params);
+      setLoading(true);
+      const res = await Auth.forgotPasswordSubmit(params.phoneOrEmail, params.code, params.new_password);
+      console.log(res);
+    }catch(error) {
+      toast.error(getError(`${error}`))
+    }
+    setLoading(false);
+  }
+
   const values = {
     loginUser,
     authUser,
     setAuthUser,
+    resetUser,
     user,
     loading,
     setUser,
     setLoading,
+    handleForgotPasswordNext,
     login: handleLogin,
     logout: handleLogout,
     register: handleRegister,
+    resetPassword,
     createAccountNext: handleCreateAccountNext,
-    loginNext: handleLoginNext
+    loginNext: handleLoginNext, 
   }
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>

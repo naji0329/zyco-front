@@ -27,6 +27,7 @@ const Home = () => {
     if (!router.isReady) {
       return
     }
+    console.log("helloworld")
 
     if (auth.user && auth.user.role) {
       const homeRoute = getHomeRoute(auth.user.role)
@@ -37,7 +38,7 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return <Spinner />
+  return <h1>Hello</h1>
 }
 
 export default Home
