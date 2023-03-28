@@ -199,7 +199,8 @@ const LoginPasswordPage = () => {
           </Box>
           <Box sx={{ mb: 6 }}>
             <Typography variant='h5' sx={{ mb: 1.5, fontWeight: 600, letterSpacing: '0.18px' }}>
-              {`Welcome back "first name"`}
+              {/* {`Welcome back "first name"`} */}
+              Welcome back
             </Typography>
             <Typography variant='body2'>To continue, first verify that it's you</Typography>
           </Box>

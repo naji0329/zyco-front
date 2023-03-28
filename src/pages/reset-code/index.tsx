@@ -1,38 +1,21 @@
-// ** ReactImports
-import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+// ** React Imports
+import { ReactNode, ChangeEvent, useState, KeyboardEvent, FormEvent, use } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
 
-// ** Third party imports
-import Cleave from 'cleave.js/react'
-
-// ** styles
-import 'cleave.js/dist/addons/cleave-phone.us'
-
-// ** util imports
-import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
-
 // ** MUI Components
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import Checkbox from '@mui/material/Checkbox'
-import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
 import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
-import InputAdornment from '@mui/material/InputAdornment'
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
+import FormHelperText from '@mui/material/FormHelperText'
 
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
+// ** Third Party Imports
+import Cleave from 'cleave.js/react'
+import { useForm, Controller } from 'react-hook-form'
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
@@ -42,33 +25,37 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
-import { useRouter } from 'next/router'
+
+// ** Custom Styled Component
 import CleaveWrapper from 'src/@core/styles/libs/react-cleave'
+
+// ** Util Import
+import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+
+import { useRouter } from 'next/router'
+
+// ** Styles
+
+import 'cleave.js/dist/addons/cleave-phone.us'
+import { Grid } from '@mui/material'
+import { Icon } from '@iconify/react'
+import { Auth } from 'aws-amplify'
+import { toast } from 'react-hot-toast'
 import { useAuth } from 'src/hooks/useAuth'
-import { validatePassword, validateRequired } from 'src/@core/utils/validator'
-import { FormHelperText } from '@mui/material'
-import { ResetParams } from 'src/context/types'
+interface State {
+  phoneOrEmail: string
+}
 
 // ** Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: 450 }
 }))
 
-const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ theme }) => ({
-  '& .MuiFormControlLabel-label': {
-    fontSize: '0.875rem',
-    color: theme.palette.text.secondary
-  }
+const LinkStyled = styled(Link)(({ theme }) => ({
+  textDecoration: 'none',
+  marginLeft: theme.spacing(1),
+  color: theme.palette.primary.main
 }))
-
-const defaultValues: { [key: string]: string } = {
-  val1: '',
-  val2: '',
-  val3: '',
-  val4: '',
-  val5: '',
-  val6: ''
-}
 
 const CleaveInput = styled(Cleave)(({ theme }) => ({
   maxWidth: 50,
@@ -86,42 +73,34 @@ const CleaveInput = styled(Cleave)(({ theme }) => ({
   }
 }))
 
-const ResetPassword = () => {
+const defaultValues: { [key: string]: string } = {
+  val1: '',
+  val2: '',
+  val3: '',
+  val4: '',
+  val5: '',
+  val6: ''
+}
 
-    // ** Hook
-    const auth = useAuth()
-    const theme = useTheme()
-    const {
-      control,
-      handleSubmit,
-      formState: { errors }
-    } = useForm({ defaultValues })
-
+const ResetCode = () => {
   // ** State
-  const [newPassword, setNewPassword] = useState('');
-  const [newPasswordError, setNewPasswordError] = useState('');
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [submitData, setSubmitData] = useState(false);
-  const [resetCode, setResetCode] = useState('');
-
+  // ** State
   const [isBackspace, setIsBackspace] = useState<boolean>(false)
-  const isFirstRender = useRef(true);
+  const router = useRouter();
+  
+  const { reset } = router.query;
+  
+  // ** Hooks
+  const theme = useTheme()
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({ defaultValues })
+  const auth = useAuth()
 
-  useEffect(()=>{
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    if(!newPasswordError) {
-      const params: ResetParams = {
-        phoneOrEmail: auth.resetUser.phoneOrEmail,
-        code: resetCode,
-        new_password: newPassword
-      }
-      auth.resetPassword(params);
-    }
-  }, [submitData])
+  // ** Vars
+  const errorsArray = Object.keys(errors)
 
   const handleChange = (event: ChangeEvent, onChange: (...event: any[]) => void) => {
     if (!isBackspace) {
@@ -137,7 +116,7 @@ const ResetPassword = () => {
     }
   }
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Backspace') {
       setIsBackspace(true)
 
@@ -168,7 +147,7 @@ const ResetPassword = () => {
             value={value}
             autoFocus={index === 0}
             component={CleaveInput}
-            onKeyDown={(event)=>handleKeyDown(event)}
+            onKeyDown={handleKeyDown}
             onChange={(event: ChangeEvent) => handleChange(event, onChange)}
             options={{ blocks: [1], numeral: true, numeralPositiveOnly: true }}
             sx={{ [theme.breakpoints.down('sm')]: { px: `${theme.spacing(2)} !important` } }}
@@ -178,39 +157,33 @@ const ResetPassword = () => {
     ))
   }
 
-  //router
-  const router = useRouter();
-
-  // ** Vars
-  const errorsArray = Object.keys(errors)
-
-  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
+  const goPrevious = () => {
+    router.back();
   }
 
-  const handleNewPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    setNewPassword(event.target.value);
-    if(formSubmitted === true) {
-      setNewPasswordError((validatePassword(event.target.value)).message);
+  const resendVerification = async () => {
+    try {
+      await Auth.resendSignUp(auth.authUser.email);
+      toast.success('Code resent successfully');
+    }catch(err) {
+      toast.error(`Error resending code`);
     }
   }
 
-  const submitForm = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  async function confirmCode(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     let code = "";
     for (const key in control._fields) {
       code += control._fields[key]?._f.value;
     }
-    setResetCode(code);
-    setFormSubmitted(true);
-
-    if(validatePassword(newPassword).error === true) {
-      setNewPasswordError(validatePassword(newPassword).message);
+    try {
+      auth.setLoading(true)
+      
+    } catch (error) {
+      toast.error('confirm sign up failed')
     }
-    setSubmitData(!submitData)
+    auth.setLoading(false)
   }
-
 
   return (
     <Box className='content-center'>
@@ -293,17 +266,19 @@ const ResetPassword = () => {
           </Box>
           <Box sx={{ mb: 6 }}>
             <Typography variant='h5' sx={{ mb: 1.5, fontWeight: 600, letterSpacing: '0.18px' }}>
-              {`Reset Password 🔒`}
+              {`Two Step Verification 💬`}
             </Typography>
+            <Typography sx={{ color: 'text.secondary' }}>
+              We sent a verification code to your {reset === 'email' ? 'email':'email'}. Enter the code from the {reset === 'email' ? 'email':'email'} in the field below.
+            </Typography>
+            <Typography sx={{ mt: 2, fontWeight: 700 }}>******gmail.com</Typography>
           </Box>
-          <form noValidate autoComplete='off' onSubmit={submitForm}>
-          <Typography variant='body2'>Type your verification code here</Typography>
-          <CleaveWrapper
+          <form onSubmit={confirmCode}>
+            <CleaveWrapper
               sx={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                mb: 2,
                 ...(errorsArray.length && {
                   '& .invalid:focus': {
                     borderColor: theme => `${theme.palette.error.main} !important`,
@@ -314,39 +289,26 @@ const ResetPassword = () => {
             >
               {renderInputs()}
             </CleaveWrapper>
-            <FormControl fullWidth>
-              <InputLabel htmlFor='auth-login-password'>New Password</InputLabel>
-              <OutlinedInput
-                label='New Password'
-                value={newPassword}
-                id='auth-login-password'
-                onChange={(e: ChangeEvent<HTMLInputElement>)=>handleNewPasswordChange(e)}
-                type={showNewPassword ? 'text' : 'password'}
-                error={newPasswordError ? true:false}
-                endAdornment={
-                  <InputAdornment position='end'>
-                    <IconButton
-                      edge='end'
-                      onClick={()=>setShowNewPassword(!showNewPassword)}
-                      onMouseDown={handleMouseDownPassword}
-                      aria-label='toggle password visibility'
-                    >
-                      <Icon icon={showNewPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-              {newPasswordError && (
-                <FormHelperText error id="auth-login-password-error">
-                  {newPasswordError}
-                </FormHelperText>
-              )}
-            </FormControl>
-            <Button type="submit" fullWidth size='large' variant='contained' sx={{ mb: 7, mt: 4 }}>
-              Confirm
-            </Button>
-            
+            {errorsArray.length ? (
+              <FormHelperText sx={{ color: 'error.main' }}>Please enter a valid OTP</FormHelperText>
+            ) : null}
+            <Grid item xs={12} mt={7}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 7 }}>
+                <Button onClick={goPrevious} color='secondary' variant='text' startIcon={<Icon icon='mdi:arrow-left' fontSize={20}/>}>
+                  Previous
+                </Button>
+                <Button type="submit" color='primary' variant='contained' endIcon={<Icon icon='mdi:arrow-right' fontSize={20} />}>
+                  Next
+                </Button>
+              </Box>
+            </Grid>
           </form>
+          <Box sx={{ mt: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Typography sx={{ color: 'text.secondary' }}>Didn't get the code?</Typography>
+            <LinkStyled href='#' onClick={resendVerification}>
+              Resend
+            </LinkStyled>
+          </Box>
         </CardContent>
       </Card>
       <FooterIllustrationsV1 />
@@ -354,8 +316,8 @@ const ResetPassword = () => {
   )
 }
 
-ResetPassword.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+ResetCode.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-ResetPassword.guestGuard = true
+ResetCode.guestGuard = true
 
-export default ResetPassword
+export default ResetCode

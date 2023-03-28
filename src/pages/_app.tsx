@@ -100,6 +100,7 @@ const Guard = ({ children, authGuard, guestGuard }: GuardProps) => {
   } else {
     return <AuthGuard fallback={<Spinner />}>{children}</AuthGuard>
   }
+  return <>{children}</>
 }
 
 // ** Configure JSS & ClassName
@@ -123,10 +124,10 @@ const App = (props: ExtendedAppProps) => {
     
       <CacheProvider value={emotionCache}>
         <Head>
-          <title>{`${themeConfig.templateName} - Material Design React Admin Template`}</title>
+          <title>{`${themeConfig.templateName}`}</title>
           <meta
             name='description'
-            content={`${themeConfig.templateName} – Material Design React Admin Dashboard Template – is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.`}
+            content={`${themeConfig.templateName} – Zyco app`}
           />
           <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
           <meta name='viewport' content='initial-scale=1, width=device-width' />

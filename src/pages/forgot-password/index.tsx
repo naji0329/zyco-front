@@ -34,6 +34,11 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import { useRouter } from 'next/router'
 import { Grid } from '@mui/material'
+import { Auth } from 'aws-amplify'
+import { toast } from 'react-hot-toast'
+import { validateRequired } from 'src/@core/utils/validator'
+import getError from 'src/@core/utils/get-toast-error'
+import { useAuth } from 'src/hooks/useAuth'
 interface State {
   phoneOrEmail: string
 }
@@ -51,28 +56,50 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 }))
 
 const ForgotPassword = () => {
-  // ** State
-  const [values, setValues] = useState<State>({
-    phoneOrEmail: ''
-  })
 
+  
   // ** Hook
   const theme = useTheme()
+  const auth = useAuth();
+
+  // ** State
+  const [phoneOrEmail, setPhoneOrEmail] = useState(auth.resetUser.phoneOrEmail || '');
+  const [phoneOrEmailError, setPhoneOrEmailError] = useState('');
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [submitData, setSubmitData] = useState(false);
 
   //router
   const router = useRouter();
 
-  const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
+  const handleChange = (event: ChangeEvent<HTMLInputElement>, prop: string) => {
+    setPhoneOrEmail(event.target.value);
+    if(formSubmitted) {
+      setPhoneOrEmailError(validateRequired("Phone or email", event.target.value).message)
+    }
   }
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
   }
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push("/two-step-v?reset=password");
+    setFormSubmitted(true);
+
+    if(validateRequired("Phone or email", phoneOrEmail).error === true) {
+      setPhoneOrEmailError(validateRequired("Phone or email", phoneOrEmail).message)
+      return;
+    }else{
+      auth.handleForgotPasswordNext({
+        phoneOrEmail: phoneOrEmail,
+        code: auth.resetUser.code,
+        new_password: auth.resetUser.new_password
+      });
+    }
+
+    setSubmitData(!submitData)
+
+
   }
 
   const goPrevious = () => {
@@ -165,7 +192,17 @@ const ForgotPassword = () => {
             <Typography variant='body2'>Enter your phone number or email and we'll send you instructions to reset your password</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-            <TextField fullWidth id='phoneOrEmail' label='Phone or email' sx={{ mb: 4 }} />
+            <TextField 
+              fullWidth 
+              id='phoneOrEmail' 
+              label='Phone or email' 
+              sx={{ mb: 4 }} 
+              value={phoneOrEmail}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e, "phoneOrEmail")}
+              error={phoneOrEmailError ? true:false}
+              helperText={phoneOrEmailError}
+            />
+            
             <Grid item xs={12} mt={7}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 7 }}>
                 <Button onClick={goPrevious} color='secondary' variant='text' startIcon={<Icon icon='mdi:arrow-left' fontSize={20}/>}>
