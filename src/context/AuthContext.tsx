@@ -228,7 +228,8 @@ const AuthProvider = ({ children }: Props) => {
       console.log(params);
       setLoading(true);
       const res = await Auth.forgotPasswordSubmit(params.phoneOrEmail, params.code, params.new_password);
-      console.log(res);
+      router.push("/login-email");
+      toast.success(res);
     }catch(error) {
       toast.error(getError(`${error}`))
     }
