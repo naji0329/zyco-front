@@ -22,14 +22,17 @@ export default function OwnershipTrip({setShowOwnership}: OwnershipProps) {
       description: 'This trip belongs to the business'
     }
   ]
+
   return (
     <>
-      <CustomCardHeader title='Ownership trip' startIcon='material-symbols:more-vert' iconOnClick={()=>setShowOwnership(false)} />
+      <CustomCardHeader title='Ownership trip' startIcon='ic:baseline-keyboard-arrow-left' iconOnClick={()=>setShowOwnership(false)} />
       <CardContent>
       {
         tripOwnerships.map((ownership, index)=>(
           <Box sx={{cursor: 'pointer'}}>
-            <UserItem item={{
+            <UserItem 
+              key={index}
+              item={{
               title: ownership.owner,
               src: '/images/avatars/1.png',
               subtitle: ownership.description,

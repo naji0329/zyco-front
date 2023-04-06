@@ -1,7 +1,5 @@
 // ** ReactImports
-import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
-
-import validator from 'validator'
+import { ChangeEvent, FormEvent, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -9,8 +7,6 @@ import Link from 'next/link'
 // ** MUI Components
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import Checkbox from '@mui/material/Checkbox'
 import TextField from '@mui/material/TextField'
 import InputLabel from '@mui/material/InputLabel'
 import Typography from '@mui/material/Typography'
@@ -52,13 +48,6 @@ interface State {
 // ** Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: 450 }
-}))
-
-const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ theme }) => ({
-  '& .MuiFormControlLabel-label': {
-    fontSize: '0.875rem',
-    color: theme.palette.text.secondary
-  }
 }))
 
 const CreateAccount = () => {

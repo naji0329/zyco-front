@@ -1,5 +1,5 @@
 // ** React Imports
-import { ReactNode, ChangeEvent, useState, KeyboardEvent, FormEvent, use } from 'react'
+import { ReactNode, ChangeEvent, useState, KeyboardEvent, FormEvent } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -42,9 +42,6 @@ import { Icon } from '@iconify/react'
 import { Auth } from 'aws-amplify'
 import { toast } from 'react-hot-toast'
 import { useAuth } from 'src/hooks/useAuth'
-interface State {
-  phoneOrEmail: string
-}
 
 // ** Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
@@ -94,7 +91,6 @@ const TwoStepV = () => {
   const theme = useTheme()
   const {
     control,
-    handleSubmit,
     formState: { errors }
   } = useForm({ defaultValues })
   const auth = useAuth()

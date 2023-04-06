@@ -5,10 +5,11 @@ import DatePickerWrapper from 'src/@core/components/date-picker-wrapper';
 import DatePicker from 'react-datepicker'
 import { AddBookingFormTypes } from './types';
 
-const AddBookingForm = ({showOwnership, setShowOwnership}: AddBookingFormTypes) => {
+const AddBookingForm = ({setShowOwnership}: AddBookingFormTypes) => {
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState<Date | null | undefined>(new Date())
   const theme = useTheme()
+  
   return (
     <>
       <List sx={{marginTop: 0}}>
