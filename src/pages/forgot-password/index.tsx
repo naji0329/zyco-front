@@ -1,5 +1,5 @@
 // ** ReactImports
-import { ChangeEvent, FormEvent, MouseEvent, ReactNode, useState } from 'react'
+import { ChangeEvent, FormEvent, ReactNode, useState } from 'react'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
@@ -59,7 +59,7 @@ const ForgotPassword = () => {
 
     if(validateRequired("Phone or email", phoneOrEmail).error === true) {
       setPhoneOrEmailError(validateRequired("Phone or email", phoneOrEmail).message)
-      
+
       return;
     }else{
       auth.handleForgotPasswordNext({
