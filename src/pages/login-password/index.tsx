@@ -7,18 +7,12 @@ import Link from 'next/link'
 // ** MUI Components
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
 import Checkbox from '@mui/material/Checkbox'
 import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
 import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
-import InputAdornment from '@mui/material/InputAdornment'
 import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
 // ** Icon Imports
@@ -32,15 +26,10 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
-import ChipsIcon from 'src/views/components/chips/ChipsIcon'
 import { Grid } from '@mui/material'
 import { useRouter } from 'next/router'
 import { validateRequired } from 'src/@core/utils/validator'
 import { useAuth } from 'src/hooks/useAuth'
-interface State {
-  password: string
-  showPassword: boolean
-}
 
 // ** Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
@@ -55,9 +44,9 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 }))
 
 const LoginPasswordPage = () => {
-      // ** Hook
-      const theme = useTheme()
-      const auth = useAuth()
+    // ** Hook
+    const theme = useTheme()
+    const auth = useAuth()
   
     // ** State
     const [password, setPassword] = useState(auth.loginUser.password || '');
@@ -92,15 +81,6 @@ const LoginPasswordPage = () => {
         setPasswordError(validateRequired("Password", e.target.value).message);
       }
     }
-
-
-  const handleClickShowPassword = () => {
-    
-  }
-
-  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
 
   const goPrevious = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

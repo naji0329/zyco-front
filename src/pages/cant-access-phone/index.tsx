@@ -1,5 +1,5 @@
 // ** ReactImports
-import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useState } from 'react'
+import { FormEvent, ReactNode } from 'react'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
@@ -9,7 +9,6 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -25,20 +24,12 @@ import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import { useRouter } from 'next/router'
 import { Grid } from '@mui/material'
 
-interface State {
-  phoneOrEmail: string
-}
-
 // ** Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: 450 }
 }))
 
 const CantAccessPhone = () => {
-  // ** State
-  const [values, setValues] = useState<State>({
-    phoneOrEmail: ''
-  })
 
   // ** Hook
   const theme = useTheme()

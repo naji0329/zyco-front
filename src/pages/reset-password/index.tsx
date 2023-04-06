@@ -95,6 +95,7 @@ const ResetPassword = () => {
   useEffect(()=>{
     if (isFirstRender.current) {
       isFirstRender.current = false;
+      
       return;
     }
     if(!newPasswordError) {

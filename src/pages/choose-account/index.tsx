@@ -1,5 +1,5 @@
 // ** ReactImports
-import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useState } from 'react'
+import { ReactNode } from 'react'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
@@ -17,10 +17,6 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import { Avatar, Button } from '@mui/material'
-
-interface State {
-  phoneOrEmail: string
-}
 
 // ** Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({

@@ -1,5 +1,5 @@
 // ** ReactImports
-import { ReactNode, useState } from 'react'
+import { ReactNode } from 'react'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
@@ -24,9 +24,6 @@ import { useRouter } from 'next/router'
 import { Stack } from '@mui/material'
 import RecoveryElementButton from 'src/views/components/recovery-element-button'
 import { Mail, Settings, SmsFailed } from '@mui/icons-material'
-interface State {
-  phoneOrEmail: string
-}
 
 // ** Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({

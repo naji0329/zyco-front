@@ -1,5 +1,5 @@
 // ** ReactImports
-import { ChangeEvent, FormEvent, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
+import { ChangeEvent, FormEvent, ReactNode, useEffect, useRef, useState } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -75,6 +75,7 @@ const CreateAccountTwo = () => {
   useEffect(()=>{
     if (isFirstRender.current) {
       isFirstRender.current = false;
+
       return;
     }
     if(!firstNameError && !lastNameError && !phoneNumberError) {

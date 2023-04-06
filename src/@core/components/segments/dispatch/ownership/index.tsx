@@ -29,9 +29,8 @@ export default function OwnershipTrip({setShowOwnership}: OwnershipProps) {
       <CardContent>
       {
         tripOwnerships.map((ownership, index)=>(
-          <Box sx={{cursor: 'pointer'}}>
+          <Box sx={{cursor: 'pointer'}} key={index}>
             <UserItem 
-              key={index}
               item={{
               title: ownership.owner,
               src: '/images/avatars/1.png',

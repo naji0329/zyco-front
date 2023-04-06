@@ -17,7 +17,6 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
 import InputAdornment from '@mui/material/InputAdornment'
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -34,6 +33,7 @@ import { useRouter } from 'next/router'
 import { FormHelperText } from '@mui/material'
 import { useAuth } from 'src/hooks/useAuth'
 import { validateEmail, validatePassword, validateRequired } from 'src/@core/utils/validator'
+
 interface State {
   username: string,
   email: string,
@@ -52,6 +52,7 @@ const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
 
 const CreateAccount = () => {
   const auth = useAuth()
+  
   // ** State
   const [username, setUsername] = useState(auth.authUser.username || '');
   const [email, setEmail] = useState(auth.authUser.email || '');
@@ -66,7 +67,6 @@ const CreateAccount = () => {
   // ** Hook
   const theme = useTheme()
 
-
   //router
   const router = useRouter();
 
@@ -77,6 +77,7 @@ const CreateAccount = () => {
   useEffect(()=>{
     if (isFirstRender.current) {
       isFirstRender.current = false;
+      
       return;
     }
     if(!passwordError && !emailError && !usernameError) {

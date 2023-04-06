@@ -34,11 +34,7 @@ const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
 }))
 
 const ForgotEmail = () => {
-  // ** State
-  const [values, setValues] = useState<State>({
-    phoneOrEmail: ''
-  })
-
+  
   // ** Hook
   const theme = useTheme()
 

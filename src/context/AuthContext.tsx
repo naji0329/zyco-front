@@ -11,7 +11,7 @@ import axios from 'axios'
 import authConfig from 'src/configs/auth'
 
 // ** Types
-import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType, ResetParams } from './types'
+import { AuthValuesType, RegisterParams, LoginParams, UserDataType, ResetParams } from './types'
 import { Auth } from 'aws-amplify'
 import { toast } from 'react-hot-toast'
 import getError from 'src/@core/utils/get-toast-error'

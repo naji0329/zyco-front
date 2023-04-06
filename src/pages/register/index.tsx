@@ -111,7 +111,6 @@ const Register = () => {
 
   // ** Hooks
   const theme = useTheme()
-  const { register } = useAuth()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
 
@@ -126,7 +125,6 @@ const Register = () => {
 
   const {
     control,
-    setError,
     handleSubmit,
     formState: { errors }
   } = useForm({
@@ -135,8 +133,8 @@ const Register = () => {
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = (data: FormData) => {
-    const { email, username, password } = data
+  const onSubmit = () => {
+
     // register({ email, username, password }, err => {
     //   if (err.email) {
     //     setError('email', {
