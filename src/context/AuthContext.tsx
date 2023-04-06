@@ -148,7 +148,7 @@ const AuthProvider = ({ children }: Props) => {
         username: user.attributes.nickname,
         email: user.attributes.email,
         phoneNumber: user.attributes.phoneNumber,
-        role: 'client'
+        role: 'admin'
       }
       setUser(dbUser);
       localStorage.setItem("userData", JSON.stringify(dbUser))
