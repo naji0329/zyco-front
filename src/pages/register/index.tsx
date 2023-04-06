@@ -36,7 +36,6 @@ import themeConfig from 'src/configs/themeConfig'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Hooks
-import { useAuth } from 'src/hooks/useAuth'
 import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Demo Imports
@@ -47,12 +46,6 @@ const defaultValues = {
   username: '',
   password: '',
   terms: false
-}
-interface FormData {
-  email: string
-  terms: boolean
-  username: string
-  password: string
 }
 
 // ** Styled Components

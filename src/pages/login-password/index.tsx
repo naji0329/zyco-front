@@ -66,6 +66,7 @@ const LoginPasswordPage = () => {
     useEffect(()=>{
       if (isFirstRender.current) {
         isFirstRender.current = false;
+        
         return;
       }
       console.log("helloworld");

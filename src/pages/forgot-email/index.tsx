@@ -1,5 +1,5 @@
 // ** ReactImports
-import { FormEvent, ReactNode, useState } from 'react'
+import { FormEvent, ReactNode } from 'react'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
@@ -24,17 +24,13 @@ import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import { useRouter } from 'next/router'
 import { Grid } from '@mui/material'
 
-interface State {
-  phoneOrEmail: string
-}
-
 // ** Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: 450 }
 }))
 
 const ForgotEmail = () => {
-  
+
   // ** Hook
   const theme = useTheme()
 
