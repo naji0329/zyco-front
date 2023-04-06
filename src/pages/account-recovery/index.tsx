@@ -1,8 +1,5 @@
 // ** ReactImports
-import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useState } from 'react'
-
-// ** Next Import
-import Link from 'next/link'
+import { ReactNode, useState } from 'react'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
@@ -11,7 +8,6 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -25,9 +21,9 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import { useRouter } from 'next/router'
-import { Alert, Stack } from '@mui/material'
+import { Stack } from '@mui/material'
 import RecoveryElementButton from 'src/views/components/recovery-element-button'
-import { Mail, MobileOff, Settings, SmsFailed } from '@mui/icons-material'
+import { Mail, Settings, SmsFailed } from '@mui/icons-material'
 interface State {
   phoneOrEmail: string
 }
@@ -38,10 +34,6 @@ const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
 }))
 
 const AccountRecovery = () => {
-  // ** State
-  const [values, setValues] = useState<State>({
-    phoneOrEmail: ''
-  })
 
   // ** Hook
   const theme = useTheme()

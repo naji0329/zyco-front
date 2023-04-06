@@ -24,7 +24,7 @@ const RecoveryElementButton = ({variant, children, text, onClick}: Props) => {
     gap: 10
   }))
 
-  return (gi
+  return (
     <RecoveryElementButtonStyled 
       sx={{
         backgroundColor: theme.palette.grey[100]
