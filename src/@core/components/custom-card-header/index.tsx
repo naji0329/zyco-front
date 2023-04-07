@@ -4,10 +4,9 @@ import OptionsMenu from '../option-menu'
 import { Icon } from '@iconify/react'
 import { CardHeaderProps } from './types'
 
-
-
 export default function CustomCardHeader({title, action, startIcon, iconOnClick}: CardHeaderProps) {
   const theme = useTheme();
+
   return (
     <CardHeader
       title={title}
@@ -17,13 +16,13 @@ export default function CustomCardHeader({title, action, startIcon, iconOnClick}
         }
       }
       avatar={<Icon onClick={()=>{
-        iconOnClick ? iconOnClick():()=>{}
-      }} icon='ic:baseline-keyboard-arrow-left' color={theme.palette.secondary.light} fontSize='1.5rem' />}
+        iconOnClick ? iconOnClick():()=>{console.log('')}
+      }} icon={startIcon ? startIcon:'ic:baseline-keyboard-arrow-left'} color={theme.palette.secondary.light} fontSize='1.5rem' />}
       action={
-        <OptionsMenu
-          options={['Refresh', 'Update', 'Share']}
-          iconButtonProps={{ size: 'small', className: 'card-more-options' }}
-        />
+        action ? action:<OptionsMenu
+        options={['Refresh', 'Update', 'Share']}
+        iconButtonProps={{ size: 'small', className: 'card-more-options' }}
+      />
       }
     />
   )

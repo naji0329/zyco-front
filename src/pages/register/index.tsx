@@ -36,7 +36,6 @@ import themeConfig from 'src/configs/themeConfig'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Hooks
-import { useAuth } from 'src/hooks/useAuth'
 import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Demo Imports
@@ -47,12 +46,6 @@ const defaultValues = {
   username: '',
   password: '',
   terms: false
-}
-interface FormData {
-  email: string
-  terms: boolean
-  username: string
-  password: string
 }
 
 // ** Styled Components
@@ -111,7 +104,6 @@ const Register = () => {
 
   // ** Hooks
   const theme = useTheme()
-  const { register } = useAuth()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
 
@@ -126,7 +118,6 @@ const Register = () => {
 
   const {
     control,
-    setError,
     handleSubmit,
     formState: { errors }
   } = useForm({
@@ -135,8 +126,8 @@ const Register = () => {
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = (data: FormData) => {
-    const { email, username, password } = data
+  const onSubmit = () => {
+
     // register({ email, username, password }, err => {
     //   if (err.email) {
     //     setError('email', {

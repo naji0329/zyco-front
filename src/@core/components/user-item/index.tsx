@@ -3,10 +3,10 @@ import { Avatar, Box, Button, Typography, useTheme } from '@mui/material';
 import React from 'react'
 import CustomChip from 'src/@core/components/mui/chip'
 import { UserItemProps } from './types';
-import OptionsMenu from '../option-menu';
 
 const UserItem = ({item}: UserItemProps) => {
   const theme = useTheme();
+  
   return (
     <Box
       key={item.title}

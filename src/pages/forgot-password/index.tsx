@@ -1,25 +1,14 @@
 // ** ReactImports
-import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useState } from 'react'
-
-// ** Next Import
-import Link from 'next/link'
+import { ChangeEvent, FormEvent, ReactNode, useState } from 'react'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import Checkbox from '@mui/material/Checkbox'
 import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
 import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
-import InputAdornment from '@mui/material/InputAdornment'
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -34,30 +23,16 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import { useRouter } from 'next/router'
 import { Grid } from '@mui/material'
-import { Auth } from 'aws-amplify'
-import { toast } from 'react-hot-toast'
 import { validateRequired } from 'src/@core/utils/validator'
-import getError from 'src/@core/utils/get-toast-error'
 import { useAuth } from 'src/hooks/useAuth'
-interface State {
-  phoneOrEmail: string
-}
 
 // ** Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: 450 }
 }))
 
-const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ theme }) => ({
-  '& .MuiFormControlLabel-label': {
-    fontSize: '0.875rem',
-    color: theme.palette.text.secondary
-  }
-}))
-
 const ForgotPassword = () => {
 
-  
   // ** Hook
   const theme = useTheme()
   const auth = useAuth();
@@ -71,15 +46,11 @@ const ForgotPassword = () => {
   //router
   const router = useRouter();
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>, prop: string) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setPhoneOrEmail(event.target.value);
     if(formSubmitted) {
       setPhoneOrEmailError(validateRequired("Phone or email", event.target.value).message)
     }
-  }
-
-  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
   }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -88,6 +59,7 @@ const ForgotPassword = () => {
 
     if(validateRequired("Phone or email", phoneOrEmail).error === true) {
       setPhoneOrEmailError(validateRequired("Phone or email", phoneOrEmail).message)
+
       return;
     }else{
       auth.handleForgotPasswordNext({
@@ -198,7 +170,7 @@ const ForgotPassword = () => {
               label='Phone or email' 
               sx={{ mb: 4 }} 
               value={phoneOrEmail}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e, "phoneOrEmail")}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e)}
               error={phoneOrEmailError ? true:false}
               helperText={phoneOrEmailError}
             />

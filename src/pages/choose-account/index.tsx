@@ -1,8 +1,5 @@
 // ** ReactImports
-import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useState } from 'react'
-
-// ** Next Import
-import Link from 'next/link'
+import { ReactNode } from 'react'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
@@ -10,7 +7,6 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
@@ -20,12 +16,7 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
-import { useRouter } from 'next/router'
 import { Avatar, Button } from '@mui/material'
-
-interface State {
-  phoneOrEmail: string
-}
 
 // ** Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
@@ -33,11 +24,6 @@ const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
 }))
 
 const ChooseAccount = () => {
-  // ** State
-  const [values, setValues] = useState<State>({
-    phoneOrEmail: ''
-  })
-
   // ** Hook
   const theme = useTheme()
   

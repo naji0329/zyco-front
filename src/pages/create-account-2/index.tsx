@@ -1,8 +1,5 @@
-//aws-amplify
-import { Auth } from 'aws-amplify'
-
 // ** ReactImports
-import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
+import { ChangeEvent, FormEvent, ReactNode, useEffect, useRef, useState } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -10,18 +7,12 @@ import Link from 'next/link'
 // ** MUI Components
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
 import Checkbox from '@mui/material/Checkbox'
 import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
 import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
-import InputAdornment from '@mui/material/InputAdornment'
 import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
 // ** Icon Imports
@@ -38,8 +29,8 @@ import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
 import { useRouter } from 'next/router'
 import { Grid } from '@mui/material'
 import { useAuth } from 'src/hooks/useAuth'
-import { RegisterParams } from 'src/context/types'
 import { validatePhoneNumber, validateRequired } from 'src/@core/utils/validator'
+
 interface State {
   firstName: string,
   lastName: string,
@@ -47,15 +38,6 @@ interface State {
   firstNameError: string,
   lastNameError: string,
   phoneNumberError: string
-}
-
-type FormDataType = {
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  email: string;
-  username: string
-  password: string
 }
 
 // ** Styled Components
@@ -93,6 +75,7 @@ const CreateAccountTwo = () => {
   useEffect(()=>{
     if (isFirstRender.current) {
       isFirstRender.current = false;
+
       return;
     }
     if(!firstNameError && !lastNameError && !phoneNumberError) {
@@ -115,10 +98,6 @@ const CreateAccountTwo = () => {
         }
       }
     }
-  }
-
-  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
   }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {

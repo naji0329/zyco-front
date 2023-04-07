@@ -6,7 +6,7 @@ import UserItem from 'src/@core/components/user-item';
 
 const Drivers = () => {
   const [search, setSearch] = useState('');
-  const [drivers, setDrivers] = useState([
+  const drivers = [
     {
       id: 1,
       name: 'Cecilia Payne',
@@ -24,9 +24,9 @@ const Drivers = () => {
       name: 'Alice Stone',
       connections: 125,
       status: 'Busy'
-    },
-    
-  ])
+    }
+  ]
+
   return (
     <>
       <OutlinedInput
@@ -51,20 +51,23 @@ const Drivers = () => {
       />
       {
         drivers.map((driver, index)=>(
-          <UserItem item={{
-            title: driver.name,
-            src: '/images/avatars/1.png',
-            subtitle: `${driver.connections} Connections`,
-            avatarVariant: 'circular',
-            mb: 4,
-            customChip: {
-              skin: 'light',
-              size: 'small',
-              chipText: driver.status,
-              chipColor: driver.status === 'Available' ? 'success' : driver.status === 'Offline' ? 'error' : 'warning'
-            },
-            more: true
-          }} />
+          <UserItem
+            key={index}
+            item={{
+              title: driver.name,
+              src: '/images/avatars/1.png',
+              subtitle: `${driver.connections} Connections`,
+              avatarVariant: 'circular',
+              mb: 4,
+              customChip: {
+                skin: 'light',
+                size: 'small',
+                chipText: driver.status,
+                chipColor: driver.status === 'Available' ? 'success' : driver.status === 'Offline' ? 'error' : 'warning'
+              },
+              more: true
+            }} 
+          />
         ))
       }
     </>

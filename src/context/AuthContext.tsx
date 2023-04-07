@@ -11,12 +11,10 @@ import axios from 'axios'
 import authConfig from 'src/configs/auth'
 
 // ** Types
-import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType, ResetParams } from './types'
+import { AuthValuesType, RegisterParams, LoginParams, UserDataType, ResetParams } from './types'
 import { Auth } from 'aws-amplify'
 import { toast } from 'react-hot-toast'
-import { Message } from '@mui/icons-material'
 import getError from 'src/@core/utils/get-toast-error'
-import isEmail from 'validator/lib/isEmail'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -132,7 +130,7 @@ const AuthProvider = ({ children }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleLogin = async (params: LoginParams, errorCallback?: ErrCallbackType) => {
+  const handleLogin = async (params: LoginParams) => {
     setLoading(true);
 
     try{
@@ -167,7 +165,7 @@ const AuthProvider = ({ children }: Props) => {
     router.push('/login')
   }
 
-  const handleRegister = async (params: RegisterParams, errorCallback?: ErrCallbackType) => {
+  const handleRegister = async (params: RegisterParams) => {
     try {
       setAuthUser({...authUser, ...params})
       localStorage.setItem("authUser", JSON.stringify(params));
@@ -198,7 +196,7 @@ const AuthProvider = ({ children }: Props) => {
     setLoading(false)
   }
 
-  const handleCreateAccountNext = (params: RegisterParams, errorCallback?: ErrCallbackType) => {
+  const handleCreateAccountNext = (params: RegisterParams) => {
     setAuthUser({...authUser, ...params})
     localStorage.setItem("authUser", JSON.stringify({...authUser, ...params}));
   }

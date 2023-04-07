@@ -1,4 +1,4 @@
-import { Amplify, Auth } from 'aws-amplify';
+import { Amplify } from 'aws-amplify';
 import awsconfig from '../aws-exports'
 
 // ** React Imports
@@ -102,7 +102,6 @@ const Guard = ({ children, authGuard, guestGuard }: GuardProps) => {
   } else {
     return <AuthGuard fallback={<Spinner />}>{children}</AuthGuard>
   }
-  return <>{children}</>
 }
 
 // ** Configure JSS & ClassName

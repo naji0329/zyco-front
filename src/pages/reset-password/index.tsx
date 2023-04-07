@@ -1,9 +1,6 @@
 // ** ReactImports
-import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
+import { ChangeEvent, FormEvent, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-
-// ** Next Import
-import Link from 'next/link'
 
 // ** Third party imports
 import Cleave from 'cleave.js/react'
@@ -17,9 +14,6 @@ import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 // ** MUI Components
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import Checkbox from '@mui/material/Checkbox'
-import TextField from '@mui/material/TextField'
 import InputLabel from '@mui/material/InputLabel'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
@@ -29,7 +23,6 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
 import InputAdornment from '@mui/material/InputAdornment'
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -42,23 +35,15 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV1 from 'src/views/pages/auth/FooterIllustrationsV1'
-import { useRouter } from 'next/router'
 import CleaveWrapper from 'src/@core/styles/libs/react-cleave'
 import { useAuth } from 'src/hooks/useAuth'
-import { validatePassword, validateRequired } from 'src/@core/utils/validator'
+import { validatePassword } from 'src/@core/utils/validator'
 import { FormHelperText } from '@mui/material'
 import { ResetParams } from 'src/context/types'
 
 // ** Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: 450 }
-}))
-
-const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ theme }) => ({
-  '& .MuiFormControlLabel-label': {
-    fontSize: '0.875rem',
-    color: theme.palette.text.secondary
-  }
 }))
 
 const defaultValues: { [key: string]: string } = {
@@ -93,7 +78,6 @@ const ResetPassword = () => {
     const theme = useTheme()
     const {
       control,
-      handleSubmit,
       formState: { errors }
     } = useForm({ defaultValues })
 
@@ -111,6 +95,7 @@ const ResetPassword = () => {
   useEffect(()=>{
     if (isFirstRender.current) {
       isFirstRender.current = false;
+      
       return;
     }
     if(!newPasswordError) {
@@ -155,6 +140,7 @@ const ResetPassword = () => {
   }
 
   const renderInputs = () => {
+
     return Object.keys(defaultValues).map((val, index) => (
       <Controller
         key={val}
@@ -177,9 +163,6 @@ const ResetPassword = () => {
       />
     ))
   }
-
-  //router
-  const router = useRouter();
 
   // ** Vars
   const errorsArray = Object.keys(errors)
@@ -210,7 +193,6 @@ const ResetPassword = () => {
     }
     setSubmitData(!submitData)
   }
-
 
   return (
     <Box className='content-center'>

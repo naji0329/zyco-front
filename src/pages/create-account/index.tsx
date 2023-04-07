@@ -1,7 +1,5 @@
 // ** ReactImports
-import { ChangeEvent, FormEvent, FormEventHandler, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
-
-import validator from 'validator'
+import { ChangeEvent, FormEvent, MouseEvent, ReactNode, useEffect, useRef, useState } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -9,8 +7,6 @@ import Link from 'next/link'
 // ** MUI Components
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import Checkbox from '@mui/material/Checkbox'
 import TextField from '@mui/material/TextField'
 import InputLabel from '@mui/material/InputLabel'
 import Typography from '@mui/material/Typography'
@@ -21,7 +17,6 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import { styled, useTheme } from '@mui/material/styles'
 import MuiCard, { CardProps } from '@mui/material/Card'
 import InputAdornment from '@mui/material/InputAdornment'
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -38,6 +33,7 @@ import { useRouter } from 'next/router'
 import { FormHelperText } from '@mui/material'
 import { useAuth } from 'src/hooks/useAuth'
 import { validateEmail, validatePassword, validateRequired } from 'src/@core/utils/validator'
+
 interface State {
   username: string,
   email: string,
@@ -54,15 +50,9 @@ const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: 450 }
 }))
 
-const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ theme }) => ({
-  '& .MuiFormControlLabel-label': {
-    fontSize: '0.875rem',
-    color: theme.palette.text.secondary
-  }
-}))
-
 const CreateAccount = () => {
   const auth = useAuth()
+  
   // ** State
   const [username, setUsername] = useState(auth.authUser.username || '');
   const [email, setEmail] = useState(auth.authUser.email || '');
@@ -77,7 +67,6 @@ const CreateAccount = () => {
   // ** Hook
   const theme = useTheme()
 
-
   //router
   const router = useRouter();
 
@@ -88,6 +77,7 @@ const CreateAccount = () => {
   useEffect(()=>{
     if (isFirstRender.current) {
       isFirstRender.current = false;
+      
       return;
     }
     if(!passwordError && !emailError && !usernameError) {
