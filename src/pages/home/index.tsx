@@ -1,33 +1,154 @@
 // ** MUI Imports
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
+import { Button, CardContent, FormControl, FormControlLabel, IconButton, InputAdornment, OutlinedInput, TextField, Typography, useTheme } from '@mui/material'
+import { Icon } from '@iconify/react'
+import Image from 'next/image'
+import { useAuth } from 'src/hooks/useAuth'
+import CustomSelect from 'src/@core/components/select'
 
 const Home = () => {
+  const theme = useTheme();
+  const auth = useAuth();
+  console.log(auth.user)
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <Card>
-          <CardHeader title='Kick start your project 🚀'></CardHeader>
-          <CardContent>
-            <Typography sx={{ mb: 2 }}>All the best for your new project.</Typography>
-            <Typography>
-              Please make sure to read our Template Documentation to understand where to go from here and how to use our
-              template.
-            </Typography>
-          </CardContent>
-        </Card>
+        <Button variant='contained' color='primary' startIcon={<Icon icon='ic:baseline-perm-identity' />}>
+          ACCOUNT
+        </Button>
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='ACL and JWT 🔒'></CardHeader>
           <CardContent>
-            <Typography sx={{ mb: 2 }}>
-              Access Control (ACL) and Authentication (JWT) are the two main security features of our template and are implemented in the starter-kit as well.
-            </Typography>
-            <Typography>Please read our Authentication and ACL Documentations to get more out of them.</Typography>
+            <Grid container spacing={4} sx={{
+              alignItems: 'center',
+              mb: 8
+            }}>
+              <Grid item>
+                <Image src='/images/avatars/1.png' alt='profile' width={120} height={120} style={{borderRadius: 10}} />
+              </Grid>
+              <Grid item>
+                <Grid container spacing={4}>
+                  <Grid item xs={12}>
+                    <Grid container spacing={4}>
+                      <Grid item>
+                        <Button variant='contained' color='primary'>UPLOAD NEW PHOTO</Button>
+                      </Grid>
+                      <Grid item>
+                        <Button variant='outlined' color='error'>RESET</Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography fontSize={12} color={theme.palette.secondary.main}>Allowed JPG, GIF or PNG, Max size of BOOK</Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <form>
+              <Grid container spacing={5}>
+                <Grid item xs={12}>
+                  <TextField 
+                    label='Username'
+                    fullWidth
+                    defaultValue='Johndoe'
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField 
+                    label='Email'
+                    fullWidth
+                    defaultValue='john.doe@gmail.com'
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField 
+                    label='Phone number'
+                    fullWidth
+                    defaultValue='+31 612345678'
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField 
+                    label='Base city'
+                    fullWidth
+                    defaultValue='Rotterdam'
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Grid container spacing={5}>
+                    <Grid item xs={6}>
+                      <CustomSelect 
+                        label='Country'
+                        id='country'
+                        defaultValue={1}
+                        menuItems={[
+                          {
+                            value: 1,
+                            text: 'Netherlands'
+                          }
+                        ]}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <CustomSelect 
+                        label='Language'
+                        id='language'
+                        defaultValue={1}
+                        menuItems={[
+                          {
+                            value: 1,
+                            text: 'Dutch'
+                          }
+                        ]}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                  <Grid container spacing={5}>
+                    <Grid item xs={6}>
+                      <CustomSelect 
+                        label='Status'
+                        id='status'
+                        defaultValue={1}
+                        menuItems={[
+                          {
+                            value: 1,
+                            text: '(GMT-11:00) International Date Line West'
+                          }
+                        ]}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <CustomSelect 
+                        label='Currency'
+                        id='currency'
+                        defaultValue={1}
+                        menuItems={[
+                          {
+                            value: 1,
+                            text: 'Euro'
+                          }
+                        ]}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12}>
+                  <Grid container spacing={4}>
+                    <Grid item>
+                      <Button variant='contained' color='primary'>SAVE CHANGES</Button>
+                    </Grid>
+                    <Grid item>
+                      <Button variant='outlined' color='secondary'>CANCER</Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </form>
           </CardContent>
         </Card>
       </Grid>
