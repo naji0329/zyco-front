@@ -9,7 +9,6 @@ import CustomSelect from 'src/@core/components/select'
 
 const Home = () => {
   const theme = useTheme();
-  const auth = useAuth();
 
   return (
     <Grid container spacing={6}>
