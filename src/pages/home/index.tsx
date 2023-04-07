@@ -1,7 +1,7 @@
 // ** MUI Imports
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import { Button, CardContent, FormControl, FormControlLabel, IconButton, InputAdornment, OutlinedInput, TextField, Typography, useTheme } from '@mui/material'
+import { Button, CardContent, TextField, Typography, useTheme } from '@mui/material'
 import { Icon } from '@iconify/react'
 import Image from 'next/image'
 import { useAuth } from 'src/hooks/useAuth'
@@ -10,7 +10,6 @@ import CustomSelect from 'src/@core/components/select'
 const Home = () => {
   const theme = useTheme();
   const auth = useAuth();
-  console.log(auth.user)
 
   return (
     <Grid container spacing={6}>
