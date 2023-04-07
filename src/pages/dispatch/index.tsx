@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Grid } from '@mui/material';
+import { Button, Card, CardContent, Divider, Grid } from '@mui/material';
 
 import React, { useState } from 'react'
 
@@ -54,11 +54,11 @@ const Dispatch = () => {
                     />
                   </Grid>
                 </Grid>
-                <CardContent sx={{paddingTop: 0}}>
+                {/* <CardContent sx={{paddingTop: 0}}> */}
                   {
                     tab === 'add booking' ? <AddBookingForm showOwnership setShowOwnership={setShowOwnership} /> : tab === 'bookings' ? '' :  <Drivers />
                   }
-                </CardContent>
+                {/* </CardContent> */}
               </>
             )
           }

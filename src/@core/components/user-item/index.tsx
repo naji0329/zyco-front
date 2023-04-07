@@ -47,7 +47,11 @@ const UserItem = ({item}: UserItemProps) => {
             <Typography variant='caption'>{item.subtitle}</Typography>
           </Box>
         </Box>
-        <Box>
+        <Box sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 3
+        }}>
           {
             item.customChip && <CustomChip
               skin='light'
@@ -59,9 +63,18 @@ const UserItem = ({item}: UserItemProps) => {
           }
           {
             item.more &&
-            <Button variant='outlined'>
+            <button
+              style={{
+                backgroundColor: 'transparent',
+                outline: 'none',
+                border: `1px solid ${theme.palette.primary.main}`,
+                borderRadius: '6px',
+                width: '36px',
+                height: '36px'
+              }}
+            >
               <Icon icon='material-symbols:more-vert' fontSize='1.5rem' color={theme.palette.primary.main} />
-            </Button>
+            </button>
           }
         </Box>
       </Box>

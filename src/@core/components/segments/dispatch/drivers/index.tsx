@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { IconButton, InputAdornment, OutlinedInput } from '@mui/material';
+import { CardContent, IconButton, InputAdornment, OutlinedInput } from '@mui/material';
 
 import React, { ChangeEvent, useState } from 'react'
 import UserItem from 'src/@core/components/user-item';
@@ -29,6 +29,7 @@ const Drivers = () => {
 
   return (
     <>
+      <CardContent>
       <OutlinedInput
         fullWidth
         size='small'
@@ -70,6 +71,7 @@ const Drivers = () => {
           />
         ))
       }
+      </CardContent>
     </>
   )
 }
