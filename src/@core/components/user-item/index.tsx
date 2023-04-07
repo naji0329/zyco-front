@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { Avatar, Box, Button, Typography, useTheme } from '@mui/material';
+import { Avatar, Box, Typography, useTheme } from '@mui/material';
 import React from 'react'
 import CustomChip from 'src/@core/components/mui/chip'
 import { UserItemProps } from './types';
