@@ -4,12 +4,10 @@ import Grid from '@mui/material/Grid'
 import { Button, CardContent, TextField, Typography, useTheme } from '@mui/material'
 import { Icon } from '@iconify/react'
 import Image from 'next/image'
-import { useAuth } from 'src/hooks/useAuth'
 import CustomSelect from 'src/@core/components/select'
 
 const Home = () => {
   const theme = useTheme();
-  const auth = useAuth();
 
   return (
     <Grid container spacing={6}>
