@@ -1,5 +1,5 @@
 import Icon from 'src/@core/components/icon'
-import { Avatar, Box, Button, Divider, Grid, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemSecondaryAction, Switch, TextField, Typography, useTheme } from '@mui/material';
+import { Avatar, Box, Button, CardContent, Divider, Grid, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemSecondaryAction, Switch, TextField, Typography, useTheme } from '@mui/material';
 import React, { useState } from 'react'
 import DatePickerWrapper from 'src/@core/components/date-picker-wrapper';
 import DatePicker from 'react-datepicker'
@@ -12,6 +12,7 @@ const AddBookingForm = ({setShowOwnership}: AddBookingFormTypes) => {
   
   return (
     <>
+      <CardContent>
       <List sx={{marginTop: 0}}>
         <ListItem sx={{margin: 0, padding: 0}}>
           <ListItemAvatar sx={{borderRadius: 0, backgroundColor: 'red', marginRight: 2.5}}>
@@ -25,7 +26,7 @@ const AddBookingForm = ({setShowOwnership}: AddBookingFormTypes) => {
           </Box>
           <ListItemSecondaryAction sx={{marginRight: 0, paddingRight: 0, marginLeft: 'auto'}}>
             <IconButton edge='end' sx={{paddingRight: 0}} onClick={()=>setShowOwnership(true)}>
-              <Icon icon='mdi:chevron-right' color={theme.palette.secondary.light} />
+              <Icon icon='mdi:chevron-right' color={theme.palette.secondary.light} opacity={.6} />
             </IconButton>
           </ListItemSecondaryAction>
         </ListItem> 
@@ -67,6 +68,28 @@ const AddBookingForm = ({setShowOwnership}: AddBookingFormTypes) => {
                   )
                 }}
               />
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container sx={{justifyContent: 'space-between', px: 3}}>
+                <Grid item sx={{display: 'flex', gap: 3}}>
+                  <Icon icon='material-symbols:swap-calls' color={theme.palette.secondary.light} fontSize={'1.5em'} opacity={.4} />
+                  <Typography sx={{
+                    color: theme.palette.secondary.light,
+                    opacity: .4
+                  }}>80 km</Typography>
+                  <Icon icon='material-symbols:timer-outline' color={theme.palette.secondary.light} fontSize={'1.5rem'} opacity={.4} />
+                  <Typography sx={{
+                    color: theme.palette.secondary.light,
+                    opacity: .4
+                  }}>84 min</Typography>
+                </Grid>
+                <Grid item sx={{display: 'flex', gap: 3}}>
+                  <Icon icon='material-symbols:add' color={theme.palette.primary.main} fontSize={'1.5em'} />
+                  <Typography sx={{
+                    color: theme.palette.primary.main,
+                  }}>VIA</Typography>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -147,22 +170,22 @@ const AddBookingForm = ({setShowOwnership}: AddBookingFormTypes) => {
                     <Typography fontSize={13} lineHeight={1}>Passengers info</Typography>
                     <Grid container spacing={6}>
                       <Grid item sx={{display: 'flex', alignItems: 'center', gap: 2}}>
-                        <Icon icon='material-symbols:person' color={theme.palette.secondary.light} />
-                        <Typography>1</Typography>
+                        <Icon icon='material-symbols:person' color={theme.palette.secondary.light} opacity={.4} />
+                        <Typography sx={{ opacity:.4}}>1</Typography>
                       </Grid>
                       <Grid item sx={{display: 'flex', alignItems: 'center', gap: 2}}>
-                        <Icon icon='material-symbols:luggage' color={theme.palette.secondary.light} />
-                        <Typography>0</Typography>
+                        <Icon icon='material-symbols:luggage' color={theme.palette.secondary.light} opacity={.4} />
+                        <Typography sx={{ opacity:.4}}>0</Typography>
                       </Grid>
                       <Grid item sx={{display: 'flex', alignItems: 'center', gap: 2}}>
-                        <Icon icon='material-symbols:shopping-bag' color={theme.palette.secondary.light} />
-                        <Typography>0</Typography>
+                        <Icon icon='material-symbols:shopping-bag' color={theme.palette.secondary.light} opacity={.4} />
+                        <Typography sx={{ opacity:.4}}>0</Typography>
                       </Grid>
                     </Grid>
                   </Box>
                   <ListItemSecondaryAction>
                     <IconButton edge='end' sx={{paddingRight: 0}}>
-                      <Icon icon='mdi:chevron-right' color={theme.palette.secondary.light} />
+                      <Icon icon='mdi:chevron-right' color={theme.palette.secondary.light} opacity={.6} />
                     </IconButton>
                   </ListItemSecondaryAction>
                 </ListItem> 
@@ -178,7 +201,7 @@ const AddBookingForm = ({setShowOwnership}: AddBookingFormTypes) => {
                   </Box>
                   <ListItemSecondaryAction>
                     <IconButton edge='end' sx={{paddingRight: 0}}>
-                      <Icon icon='mdi:chevron-right' color={theme.palette.secondary.light} />
+                      <Icon icon='mdi:chevron-right' color={theme.palette.secondary.light} opacity={.6} />
                     </IconButton>
                   </ListItemSecondaryAction>
                 </ListItem> 
@@ -193,7 +216,7 @@ const AddBookingForm = ({setShowOwnership}: AddBookingFormTypes) => {
                     </Box>
                     <ListItemSecondaryAction>
                       <IconButton edge='end' sx={{paddingRight: 0}}>
-                        <Icon icon='mdi:chevron-right' color={theme.palette.secondary.light} />
+                        <Icon icon='mdi:chevron-right' color={theme.palette.secondary.light} opacity={.6} />
                       </IconButton>
                     </ListItemSecondaryAction>
                   </ListItem>
@@ -208,7 +231,7 @@ const AddBookingForm = ({setShowOwnership}: AddBookingFormTypes) => {
                     </Box>
                     <ListItemSecondaryAction>
                       <IconButton edge='end' sx={{paddingRight: 0}}>
-                        <Icon icon='mdi:chevron-right' color={theme.palette.secondary.light} />
+                        <Icon icon='mdi:chevron-right' color={theme.palette.secondary.light} opacity={.6} />
                       </IconButton>
                     </ListItemSecondaryAction>
                   </ListItem> 
@@ -220,6 +243,7 @@ const AddBookingForm = ({setShowOwnership}: AddBookingFormTypes) => {
           </Grid>
         </form>
       </DatePickerWrapper>
+      </CardContent>
     </>
   )
 }
