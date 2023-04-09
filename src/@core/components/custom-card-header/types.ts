@@ -4,5 +4,5 @@ export type CardHeaderProps = {
   title: string,
   action?: React.ReactNode,
   startIcon: string,
-  iconOnClick?: ()=>void
+  onBack?: ()=>void
 }

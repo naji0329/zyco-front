@@ -1,11 +1,10 @@
-import { Icon } from '@iconify/react';
-import { CardContent, IconButton, InputAdornment, OutlinedInput } from '@mui/material';
+import { Box, CardContent } from '@mui/material';
 
-import React, { ChangeEvent, useState } from 'react'
+import React from 'react'
+import SearchInput from 'src/@core/components/search-input';
 import UserItem from 'src/@core/components/user-item';
 
 const Drivers = () => {
-  const [search, setSearch] = useState('');
   const drivers = [
     {
       id: 1,
@@ -30,26 +29,9 @@ const Drivers = () => {
   return (
     <>
       <CardContent>
-      <OutlinedInput
-        fullWidth
-        size='small'
-        placeholder='Search'
-        value={search}
-        id='search'
-        onChange={(e: ChangeEvent<HTMLInputElement>)=>setSearch(e.target.value)}
-        type='text'
-        sx={{my: 5}}
-        endAdornment={
-          <InputAdornment position='end'>
-            <IconButton
-              edge='end'
-              onClick={()=>console.log('search')}
-            >
-              <Icon fontSize={20} icon='ic:baseline-search' />
-            </IconButton>
-          </InputAdornment>
-        }
-      />
+      <Box my={5}>
+        <SearchInput />
+      </Box>
       {
         drivers.map((driver, index)=>(
           <UserItem

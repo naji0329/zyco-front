@@ -7,5 +7,7 @@ export type SelectProps = {
   id: string,
   defaultValue: number,
   labelId?: string,
-  menuItems: Array<MenuItem>
+  menuItems: Array<MenuItem>,
+  size?: 'small'|'medium',
+  startIcon?: 'string'
 }

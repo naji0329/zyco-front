@@ -1,35 +1,55 @@
 import Icon from 'src/@core/components/icon'
-import { Avatar, Box, Button, CardContent, Divider, Grid, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemSecondaryAction, Switch, TextField, Typography, useTheme } from '@mui/material';
+import { Box, Button, CardContent, Divider, Grid, InputAdornment, List, Switch, TextField, Typography, useTheme } from '@mui/material';
 import React, { useState } from 'react'
 import DatePickerWrapper from 'src/@core/components/date-picker-wrapper';
 import DatePicker from 'react-datepicker'
 import { AddBookingFormTypes } from './types';
+import { BookingItemProps } from 'src/@core/components/booking-item/types';
+import BookingItem from 'src/@core/components/booking-item';
 
-const AddBookingForm = ({setShowOwnership}: AddBookingFormTypes) => {
+const AddBookingForm = ({changeBookingItem}: AddBookingFormTypes) => {
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState<Date | null | undefined>(new Date())
   const theme = useTheme()
   
+  const bookingOwnership: BookingItemProps = {
+    title: 'Me',
+    subtitle: 'Booking ownership',
+    startIcon: 'material-symbols:account-tree',
+    onClick: () => changeBookingItem('Booking ownership')
+  }
+  const dispatchTo: BookingItemProps = {
+    title: 'To myself',
+    subtitle: 'Dispatch',
+    startAvatar: '/images/avatars/1.png',
+    onClick: () => changeBookingItem('Dispatch')
+  }
+  const payment: BookingItemProps = {
+    title: 'Cash | By meter',
+    subtitle: 'Payment',
+    onClick: () => changeBookingItem('Payment')
+  }
+  const basicVehicle: BookingItemProps = {
+    title: 'Saloon',
+    subtitle: 'Basic vehicle',
+    startIcon: 'material-symbols:local-taxi',
+    onClick: () => changeBookingItem('Basic vehicle')
+  }
+  const passengersInfo: BookingItemProps = {
+    subtitle: 'Passengers info',
+    startIcon: 'ic:baseline-info',
+    onClick: () => changeBookingItem('Passengers info')
+  }
+
+  
+
   return (
     <>
       <CardContent>
       <List sx={{marginTop: 0}}>
-        <ListItem sx={{margin: 0, padding: 0}}>
-          <ListItemAvatar sx={{borderRadius: 0, backgroundColor: 'red', marginRight: 2.5}}>
-            <Avatar alt='Caroline Black' sx={{ height: 36, width: 36, borderRadius: 0, marginRight: 0 }}>
-              <Icon icon='material-symbols:account-tree' />
-            </Avatar>
-          </ListItemAvatar>
-          <Box sx={{paddingTop: 1}}>
-            <Typography fontSize={13} lineHeight={1}>Booking ownership</Typography>
-            <Typography fontWeight={600} color={theme.palette.secondary.light}>Me</Typography>
-          </Box>
-          <ListItemSecondaryAction sx={{marginRight: 0, paddingRight: 0, marginLeft: 'auto'}}>
-            <IconButton edge='end' sx={{paddingRight: 0}} onClick={()=>setShowOwnership(true)}>
-              <Icon icon='mdi:chevron-right' color={theme.palette.secondary.light} opacity={.6} />
-            </IconButton>
-          </ListItemSecondaryAction>
-        </ListItem> 
+        <BookingItem 
+          {...bookingOwnership}
+        />
       </List>
       <Box sx={{display: 'flex', justifyContent: 'right'}}>
         <Box sx={{
@@ -74,13 +94,13 @@ const AddBookingForm = ({setShowOwnership}: AddBookingFormTypes) => {
                 <Grid item sx={{display: 'flex', gap: 3}}>
                   <Icon icon='material-symbols:swap-calls' color={theme.palette.secondary.light} fontSize={'1.5em'} opacity={.4} />
                   <Typography sx={{
-                    color: theme.palette.secondary.light,
-                    opacity: .4
+                    color: theme.palette.secondary.main,
+                    opacity: .6
                   }}>80 km</Typography>
                   <Icon icon='material-symbols:timer-outline' color={theme.palette.secondary.light} fontSize={'1.5rem'} opacity={.4} />
                   <Typography sx={{
-                    color: theme.palette.secondary.light,
-                    opacity: .4
+                    color: theme.palette.secondary.main,
+                    opacity: .6
                   }}>84 min</Typography>
                 </Grid>
                 <Grid item sx={{display: 'flex', gap: 3}}>
@@ -160,86 +180,45 @@ const AddBookingForm = ({setShowOwnership}: AddBookingFormTypes) => {
             </Grid>
             <Grid item xs={12}>
               <List sx={{marginTop: 0, padding: 0}}>
-                <ListItem sx={{margin: 0, padding: 0}}>
-                  <ListItemAvatar sx={{borderRadius: 0, marginRight: 2.5}}>
-                    <Avatar alt='Caroline Black' sx={{ height: 36, width: 36, borderRadius: 0, marginRight: 0 }}>
-                      <Icon icon='material-symbols:account-tree' />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <Box sx={{paddingTop: 1}}>
-                    <Typography fontSize={13} lineHeight={1}>Passengers info</Typography>
-                    <Grid container spacing={6}>
-                      <Grid item sx={{display: 'flex', alignItems: 'center', gap: 2}}>
-                        <Icon icon='material-symbols:person' color={theme.palette.secondary.light} opacity={.4} />
-                        <Typography sx={{ opacity:.4}}>1</Typography>
-                      </Grid>
-                      <Grid item sx={{display: 'flex', alignItems: 'center', gap: 2}}>
-                        <Icon icon='material-symbols:luggage' color={theme.palette.secondary.light} opacity={.4} />
-                        <Typography sx={{ opacity:.4}}>0</Typography>
-                      </Grid>
-                      <Grid item sx={{display: 'flex', alignItems: 'center', gap: 2}}>
-                        <Icon icon='material-symbols:shopping-bag' color={theme.palette.secondary.light} opacity={.4} />
-                        <Typography sx={{ opacity:.4}}>0</Typography>
-                      </Grid>
+                <BookingItem 
+                  {...passengersInfo}
+                >
+                  <Grid container spacing={6}>
+                    <Grid item sx={{display: 'flex', alignItems: 'center', gap: 2}}>
+                      <Icon icon='material-symbols:person' color={theme.palette.secondary.light} opacity={.4} />
+                      <Typography sx={{ opacity:.4}}>1</Typography>
                     </Grid>
-                  </Box>
-                  <ListItemSecondaryAction>
-                    <IconButton edge='end' sx={{paddingRight: 0}}>
-                      <Icon icon='mdi:chevron-right' color={theme.palette.secondary.light} opacity={.6} />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem> 
-                <ListItem sx={{margin: 0, padding: 0, marginTop: 5}}>
-                  <ListItemAvatar sx={{borderRadius: 0, backgroundColor: 'red', marginRight: 2.5}}>
-                    <Avatar alt='Caroline Black' sx={{ height: 36, width: 36, borderRadius: 0, marginRight: 0 }}>
-                      <Icon icon='material-symbols:local-taxi' />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <Box sx={{paddingTop: 1}}>
-                    <Typography fontSize={13} lineHeight={1}>Basic vehicle</Typography>
-                    <Typography fontWeight={600} color={theme.palette.secondary.light}>Saloon</Typography>
-                  </Box>
-                  <ListItemSecondaryAction>
-                    <IconButton edge='end' sx={{paddingRight: 0}}>
-                      <Icon icon='mdi:chevron-right' color={theme.palette.secondary.light} opacity={.6} />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem> 
+                    <Grid item sx={{display: 'flex', alignItems: 'center', gap: 2}}>
+                      <Icon icon='material-symbols:luggage' color={theme.palette.secondary.light} opacity={.4} />
+                      <Typography sx={{ opacity:.4}}>0</Typography>
+                    </Grid>
+                    <Grid item sx={{display: 'flex', alignItems: 'center', gap: 2}}>
+                      <Icon icon='material-symbols:shopping-bag' color={theme.palette.secondary.light} opacity={.4} />
+                      <Typography sx={{ opacity:.4}}>0</Typography>
+                    </Grid>
+                  </Grid>
+                </BookingItem>
               </List>
             </Grid>
+            <Grid item xs={12}>
+              <BookingItem 
+                {...basicVehicle}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <List>
+                <BookingItem 
+                  {...payment}
+                />
+                <Divider />
+                <BookingItem 
+                  {...dispatchTo}
+                />
+              </List>
               <Grid item xs={12}>
-                <List>
-                  <ListItem sx={{margin: 0, padding: 0, marginTop: 5}}>
-                    <Box sx={{paddingTop: 1}}>
-                      <Typography fontSize={13} lineHeight={1}>Payment</Typography>
-                      <Typography fontWeight={600} color={theme.palette.secondary.light}>Cash | By meter</Typography>
-                    </Box>
-                    <ListItemSecondaryAction>
-                      <IconButton edge='end' sx={{paddingRight: 0}}>
-                        <Icon icon='mdi:chevron-right' color={theme.palette.secondary.light} opacity={.6} />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                  <Divider />
-                  <ListItem sx={{margin: 0, padding: 0, marginTop: 5}}>
-                    <ListItemAvatar sx={{borderRadius: 0, backgroundColor: 'red', marginRight: 2.5}}>
-                      <Avatar alt='Caroline Black' sx={{ height: 36, width: 36, borderRadius: 0, marginRight: 0 }} src='' />
-                    </ListItemAvatar>
-                    <Box sx={{paddingTop: 1}}>
-                      <Typography fontSize={13} lineHeight={1}>Dispatch</Typography>
-                      <Typography fontWeight={600} color={theme.palette.secondary.light}>To myself</Typography>
-                    </Box>
-                    <ListItemSecondaryAction>
-                      <IconButton edge='end' sx={{paddingRight: 0}}>
-                        <Icon icon='mdi:chevron-right' color={theme.palette.secondary.light} opacity={.6} />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem> 
-                </List>
-                <Grid item xs={12}>
-                  <Button variant='contained' color='primary' fullWidth>DISPATCH</Button>
-                </Grid>
+                <Button variant='contained' color='primary' fullWidth>DISPATCH</Button>
               </Grid>
+            </Grid>
           </Grid>
         </form>
       </DatePickerWrapper>

@@ -4,7 +4,7 @@ import { OwnershipProps } from './types'
 import UserItem from 'src/@core/components/user-item'
 import { Box, CardContent } from '@mui/material'
 
-export default function OwnershipTrip({setShowOwnership}: OwnershipProps) {
+export default function OwnershipTrip({onBack}: OwnershipProps) {
   const tripOwnerships: Array<{id: number, owner: string, description: string}> = [
     {
       id: 1,
@@ -25,7 +25,7 @@ export default function OwnershipTrip({setShowOwnership}: OwnershipProps) {
 
   return (
     <>
-      <CustomCardHeader title='Ownership trip' startIcon='ic:baseline-keyboard-arrow-left' iconOnClick={()=>setShowOwnership(false)} />
+      <CustomCardHeader title='Ownership trip' startIcon='ic:baseline-keyboard-arrow-left' onBack={()=>onBack()} />
       <CardContent>
       {
         tripOwnerships.map((ownership, index)=>(
