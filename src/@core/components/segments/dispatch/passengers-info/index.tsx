@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import CustomCardHeader from 'src/@core/components/custom-card-header'
 import { PassengersInfoProps } from './types'
-import UserItem from 'src/@core/components/user-item'
 import { Box, Button, CardContent, Grid, InputAdornment, TextField, Typography, useTheme } from '@mui/material'
 import { Icon } from '@iconify/react'
 import CustomSelect from 'src/@core/components/select'

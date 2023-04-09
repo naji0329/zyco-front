@@ -1,5 +1,5 @@
 import Icon from 'src/@core/components/icon'
-import { Avatar, Box, Button, CardContent, Divider, Grid, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemSecondaryAction, Switch, TextField, Typography, useTheme } from '@mui/material';
+import { Box, Button, CardContent, Divider, Grid, InputAdornment, List, Switch, TextField, Typography, useTheme } from '@mui/material';
 import React, { useState } from 'react'
 import DatePickerWrapper from 'src/@core/components/date-picker-wrapper';
 import DatePicker from 'react-datepicker'

@@ -1,6 +1,6 @@
 import { Box, CardContent } from '@mui/material';
 
-import React, { useState } from 'react'
+import React from 'react'
 import SearchInput from 'src/@core/components/search-input';
 import UserItem from 'src/@core/components/user-item';
 
