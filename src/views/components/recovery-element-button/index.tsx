@@ -27,7 +27,7 @@ const RecoveryElementButton = ({variant, children, text, onClick}: Props) => {
   return (
     <RecoveryElementButtonStyled 
       sx={{
-        backgroundColor: theme.palette.grey[100]
+        backgroundColor: theme.palette.customColors.tableHeaderBg
       }}
       variant={variant} 
       color={isHovering ? 'primary':'secondary'} 
