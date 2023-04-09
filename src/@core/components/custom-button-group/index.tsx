@@ -3,6 +3,7 @@ import React from 'react'
 
 function CustomButtonGroup() {
   const theme = useTheme();
+  
   return (
     <ButtonGroup fullWidth>
       <Button sx={{paddingY: '7px', paddingX: '22px', borderRight: `1px solid ${theme.palette.primary.main} !important`}} variant='contained'>ALL</Button>
