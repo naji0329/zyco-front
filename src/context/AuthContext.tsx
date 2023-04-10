@@ -20,7 +20,8 @@ import getError from 'src/@core/utils/get-toast-error'
 const defaultProvider: AuthValuesType = {
   loginUser: {
     phoneOrEmail: '',
-    password: ''
+    password: '',
+    rememberMe: false
   },
   authUser: {
     username: '',
@@ -84,7 +85,8 @@ const AuthProvider = ({ children }: Props) => {
 
   const [loginUser, setLoginUser] = useState<LoginParams>({
     phoneOrEmail: defaultLoginUser && (JSON.parse(defaultLoginUser ? defaultLoginUser:'')).phoneOrEmail || '',
-    password: defaultLoginUser && (JSON.parse(defaultLoginUser ? defaultLoginUser:'')).password || ''
+    password: defaultLoginUser && (JSON.parse(defaultLoginUser ? defaultLoginUser:'')).password || '',
+    rememberMe: defaultLoginUser && (JSON.parse(defaultLoginUser ? defaultLoginUser:'')).rememberMe || false
   })
 
   const [resetUser, setResetUser] = useState<ResetParams>({
@@ -130,6 +132,23 @@ const AuthProvider = ({ children }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  //logout user when closes the browser window
+  useEffect(() => {
+    const handleBeforeUnload = async (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      const rememberMe = await JSON.parse((localStorage.getItem('rememberMe') || ''));
+      if(!rememberMe) {
+        localStorage.clear();
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   const handleLogin = async (params: LoginParams) => {
     setLoading(true);
 
@@ -150,6 +169,7 @@ const AuthProvider = ({ children }: Props) => {
       }
       setUser(dbUser);
       localStorage.setItem("userData", JSON.stringify(dbUser))
+      localStorage.setItem('rememberMe', JSON.stringify(params.rememberMe))
       router.push("/");
     }catch(error) {
       console.log(error)
@@ -160,9 +180,10 @@ const AuthProvider = ({ children }: Props) => {
 
   const handleLogout = () => {
     setUser(null)
-    window.localStorage.removeItem('userData')
-    window.localStorage.removeItem(authConfig.storageTokenKeyName)
-    router.push('/login')
+    // window.localStorage.removeItem('userData')
+    // window.localStorage.removeItem(authConfig.storageTokenKeyName)
+    window.localStorage.clear();
+    router.push('/login-email')
   }
 
   const handleRegister = async (params: RegisterParams) => {

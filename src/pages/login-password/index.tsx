@@ -72,7 +72,7 @@ const LoginPasswordPage = () => {
       console.log("helloworld");
       if(!passwordError) {
         const loginData = auth.loginUser;
-        auth.login({phoneOrEmail: loginData.phoneOrEmail, password: password});
+        auth.login({phoneOrEmail: loginData.phoneOrEmail, password: password, rememberMe: loginData.rememberMe});
       }
     }, [submitData])
   

@@ -1,5 +1,5 @@
 // ** ReactImports
-import { ChangeEvent, FormEvent, ReactNode, useEffect, useRef, useState } from 'react'
+import { ChangeEvent, FormEvent, ReactNode, SyntheticEvent, useEffect, useRef, useState } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -66,6 +66,7 @@ const CreateAccountTwo = () => {
   const [phoneNumberError, setPhoneNumberError] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [submitData, setSubmitData] = useState(false);
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
 
   //router
   const router = useRouter();
@@ -98,6 +99,10 @@ const CreateAccountTwo = () => {
         }
       }
     }
+  }
+
+  const handleCheckboxChange = (e: SyntheticEvent<Element, Event>, checked: boolean) => {
+    setAgreeToTerms(checked);
   }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -257,6 +262,8 @@ const CreateAccountTwo = () => {
                 label='i Agree to privacy policy & terms'
                 control={<Checkbox />}
                 sx={{ '& .MuiFormControlLabel-label': { color: 'text.primary' } }}
+                onChange={handleCheckboxChange}
+                checked={agreeToTerms}
               />
             </Box>
 
@@ -265,7 +272,13 @@ const CreateAccountTwo = () => {
                 <Button onClick={goPrevious} color='secondary' variant='text' startIcon={<Icon icon='mdi:arrow-left' fontSize={20}/>}>
                   Previous
                 </Button>
-                <Button type='submit' color='primary' variant='contained' endIcon={<Icon icon='mdi:arrow-right' fontSize={20} />}>
+                <Button 
+                  type='submit' 
+                  color='primary' 
+                  variant='contained' 
+                  endIcon={<Icon icon='mdi:arrow-right' fontSize={20} />}
+                  disabled={agreeToTerms === false}
+                >
                   {auth.loading ? 'Loading...':'Next'}
                 </Button>
               </Box>
