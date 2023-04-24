@@ -33,9 +33,9 @@ const Dispatch = () => {
   }
 
   return (
-    <Grid container sx={{minHeight: '90vh', backgroundImage: 'url(/images/google_map.png)', backgroundSize: 'cover', backgroundPosition: 'center'}} spacing={5}>
-      <Grid item md={5} xs={12}>
-        <Card sx={{height: '100%', width: '100%'}}>
+    <Grid container sx={{height: '88vh', backgroundImage: 'url(/images/google_map.png)', backgroundSize: 'cover', backgroundPosition: 'center'}} spacing={5}>
+      <Grid item md={5} xs={12} sx={{maxHeight: '100%'}}>
+        <Card sx={{width: '100%', height: '100%', overflow: 'scroll'}}>
           {
             bookingItemShown === 'default' && (
             <>

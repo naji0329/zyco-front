@@ -1,5 +1,5 @@
 // ** ReactImports
-import { ChangeEvent, FormEvent, ReactNode, useEffect, useRef, useState } from 'react'
+import { ChangeEvent, FormEvent, ReactNode, SyntheticEvent, useEffect, useRef, useState } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -41,14 +41,15 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 
 const LoginEmailPage = () => {
 
-    // ** Hook
-    const theme = useTheme()
-    const auth = useAuth()
+  // ** Hook
+  const theme = useTheme()
+  const auth = useAuth()
 
   // ** State
   const [phoneOrEmail, setPhoneOrEmail] = useState(auth.loginUser.phoneOrEmail || '');
   const [phoneOrEmailError, setPhoneOrEmailError] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   //helps in useEffect to know form has been submitted successfully
   const [submitData, setSubmitData] = useState(false);
@@ -66,7 +67,7 @@ const LoginEmailPage = () => {
     }
     if(!phoneOrEmailError) {
       const loginUser = auth.loginUser;
-      auth.loginNext({phoneOrEmail: phoneOrEmail, password: loginUser.password})
+      auth.loginNext({phoneOrEmail: phoneOrEmail, password: loginUser.password, rememberMe: rememberMe})
       router.push("/login-password")
     }
   }, [submitData])
@@ -76,6 +77,10 @@ const LoginEmailPage = () => {
     if(formSubmitted) {
       setPhoneOrEmailError(validateRequired("Phone or email", phoneOrEmail).message);
     }
+  }
+
+  const handleCheckboxChange = (e: SyntheticEvent<Element, Event>, checked: boolean) => {
+    setRememberMe(checked);
   }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -191,6 +196,8 @@ const LoginEmailPage = () => {
                 label='Remember Me'
                 control={<Checkbox />}
                 sx={{ '& .MuiFormControlLabel-label': { color: 'text.primary' } }}
+                onChange={handleCheckboxChange}
+                checked={rememberMe}
               />
               <Typography
                 variant='body2'
